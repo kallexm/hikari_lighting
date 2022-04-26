@@ -1,0 +1,14 @@
+manifest:
+  remotes:
+    - name: nrfconnect
+      url-base: https://github.com/nrfconnect
+
+  projects:
+    - name: nrf
+      repo-path: sdk-nrf
+      remote: nrfconnect
+      revision: c1ef2d973c9c0023fa34eb216211e38d93e6c08e
+      import: true
+
+  self:
+    path: hikari

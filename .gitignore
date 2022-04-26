@@ -1,0 +1,18 @@
+# editors
+.vscode
+*.o
+*.d
+*.cmd
+*.log
+*.pyc
+*.swp
+*.swo
+*~
+venv
+.venv
+
+# build
+build
+build-*
+build_*
+

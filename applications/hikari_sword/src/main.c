@@ -35,6 +35,8 @@ void main(void)
 
 	printk("Startup\n");
 
+	ble_start();
+
 	if (!device_is_ready(led.port)) {
 		return;
 	}

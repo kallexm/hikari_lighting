@@ -1,0 +1,5 @@
+menu "Hikari Libraries"
+
+rsource "adrledrgb/Kconfig"
+
+endmenu

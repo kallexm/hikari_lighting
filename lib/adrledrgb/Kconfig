@@ -1,0 +1,3 @@
+config ADRLEDRGB
+	bool "Addressable RGB LED"
+	select NRFX_PWM1

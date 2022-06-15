@@ -1,2 +1,2 @@
-add_subdirectory(adrledrgb)
+add_subdirectory_ifdef(CONFIG_ADRLEDRGB adrledrgb)
 add_subdirectory(bit_base)

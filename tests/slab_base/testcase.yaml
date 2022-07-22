@@ -1,6 +1,0 @@
-tests:
-  lib.node_base:
-    platform_allow: native_posix
-    integration_platforms:
-      - native_posix
-    tags: node_base

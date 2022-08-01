@@ -1,0 +1,5 @@
+menu "slab test options"
+
+endmenu
+
+source "Kconfig.zephyr"

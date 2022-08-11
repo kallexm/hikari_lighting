@@ -1,0 +1,5 @@
+menu "slab_delay test options"
+
+endmenu
+
+source "Kconfig.zephyr"

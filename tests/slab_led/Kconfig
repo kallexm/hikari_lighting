@@ -1,0 +1,5 @@
+menu "slab_led test options"
+
+endmenu
+
+source "Kconfig.zephyr"

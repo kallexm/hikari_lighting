@@ -1,5 +1,5 @@
-#ifndef SLAB_GLOWER_V_H__
-#define SLAB_GLOWER_V_H__
+#ifndef SLAB_GLOWER_H__
+#define SLAB_GLOWER_H__
 
 #include "slab.h"
 #include "rgb_hsv.h"
@@ -26,4 +26,4 @@ void slab_glower_destroy(struct slab *slab);
 
 void slab_glower_stim(struct slab *slab, struct slab_event *evt);
 
-#endif /* SLAB_GENERATOR_H__ */
+#endif /* SLAB_GLOWER_H__ */

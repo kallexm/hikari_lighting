@@ -12,14 +12,15 @@ struct slab_event *slab_event_create(enum slab_event_id event_id, ...)
 	va_start(args, event_id);
 
 	switch (event_id) {
-	case SLAB_EVENT_RESET:
+	case SLAB_EVENT_RESET: {
 		new_evt = slab_event_reset_create();
 		break;
-
-	case SLAB_EVENT_TICK:
-		new_evt = slab_event_tick_create();
+	}
+	case SLAB_EVENT_TICK: {
+		uint32_t time = va_arg(args, uint32_t);
+		new_evt = slab_event_tick_create(time);
 		break;
-
+	}
 	case SLAB_EVENT_RGB: {
 		struct rgb_value val = va_arg(args, struct rgb_value);
 		new_evt = slab_event_rgb_create(val);

@@ -1,8 +1,18 @@
+#include <zephyr/random/rand32.h>
+
 #include "slab_event.h"
+#include "events/slab_event_tick.h"
 
 #include "slabs/slab_glower.h"
 
 #include "glow_func.h"
+
+
+static inline float random_value()
+{
+	return (float)(sys_rand32_get() & 0x03FF) / 1024.0;
+}
+
 
 struct slab *slab_glower_create(struct slab_glower_config *config)
 {
@@ -38,8 +48,8 @@ void slab_glower_stim(struct slab *slab, struct slab_event *evt)
 		break;
 
 	case SLAB_EVENT_TICK: {
-		uint32_t time = 1; /* TODO */
-		float rand_val = 0.5; /* TODO */
+		uint32_t time = slab_event_tick_get_time(evt);
+		float rand_val = random_value();
 		glower_slab->data.v = glow_func_process(glower_slab->gen, time, rand_val);
 
 		struct slab_event *hsv_evt = slab_event_create(SLAB_EVENT_HSV, glower_slab->data);

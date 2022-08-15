@@ -6,6 +6,7 @@
 
 #include "slabs/slab_led.h"
 #include "slabs/slab_delay.h"
+#include "slabs/slab_ticker.h"
 #include "slabs/slab_glower.h"
 #include "slabs/slab_hsv2rgb.h"
 #include "slabs/slab_rgb2hsv.h"
@@ -33,6 +34,10 @@ struct slab *slab_create(enum slab_type type, ...)
 		uint32_t delay_periods = va_arg(args, uint32_t);
 		new_slab = slab_delay_create(delay_periods);
 		break;
+	}
+	case SLAB_TYPE_TICKER: {
+		uint32_t timer_period = va_arg(args, uint32_t);
+		new_slab = slab_ticker_create(timer_period);
 	}
 	case SLAB_TYPE_GLOWER: {
 		struct slab_glower_config *conf = va_arg(args, struct slab_glower_config *);
@@ -86,6 +91,9 @@ void slab_destroy(struct slab *slab)
 	case SLAB_TYPE_DELAY:
 		slab_delay_destroy(slab);
 		break;
+
+	case SLAB_TYPE_TICKER:
+		slab_ticker_destroy(slab);
 
 	case SLAB_TYPE_GLOWER:
 		slab_glower_destroy(slab);
@@ -180,6 +188,9 @@ void slab_stim(struct slab *slab, struct slab_event *evt)
 	case SLAB_TYPE_DELAY:
 		slab_delay_stim(slab, evt);
 		break;
+
+	case SLAB_TYPE_TICKER:
+		slab_ticker_stim(slab, evt);
 
 	case SLAB_TYPE_GLOWER:
 		slab_glower_stim(slab, evt);

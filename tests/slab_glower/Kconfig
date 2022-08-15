@@ -1,0 +1,5 @@
+menu "slab_glower test options"
+
+endmenu
+
+source "Kconfig.zephyr"

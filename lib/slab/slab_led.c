@@ -66,5 +66,6 @@ void slab_led_stim(struct slab *slab, struct slab_event *evt)
 
 	default:
 		slab_stim_childs(slab, evt);
+		break;
 	}
 }

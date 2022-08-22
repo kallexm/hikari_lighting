@@ -6,8 +6,8 @@
 #include "slabs/slab_ticker.h"
 
 K_THREAD_STACK_DEFINE(ticker_workqueue_stack, TICKER_WORKQUEUE_STACK_SIZE);
-struct k_work_q ticker_work_q;
-bool work_q_initialized;
+static struct k_work_q ticker_work_q;
+static bool work_q_initialized = false;
 
 
 static void timer_expired(struct k_timer *timer)
@@ -25,6 +25,7 @@ static void work_tick(struct k_work *work)
 	uint32_t current_time = k_uptime_get_32();
 	struct slab_event *tick_evt = slab_event_create(SLAB_EVENT_TICK, current_time);
 
+	slab_event_acquire(tick_evt);
 	slab_stim_childs(slab, tick_evt);
 }
 
@@ -35,19 +36,20 @@ struct slab *slab_ticker_create(k_timeout_t tick_period)
 
 	if (!work_q_initialized) {
 		k_work_queue_init(&ticker_work_q);
-
 		k_work_queue_start(&ticker_work_q, ticker_workqueue_stack,
 						   K_THREAD_STACK_SIZEOF(ticker_workqueue_stack),
 						   TICKER_WORKQUEUE_THREAD_PRIO, NULL);
 
-		work_q_initialized == true;
+		work_q_initialized = true;
 	}
 
 	new_slab->period = tick_period;
 
 	k_work_init(&new_slab->tick_work, work_tick);
 	k_timer_init(&new_slab->tick_timer, timer_expired, NULL);
-	k_timer_start(new_slab->tick_timer, new_slab->period, new_slab->period);
+	k_timer_start(&new_slab->tick_timer, new_slab->period, new_slab->period);
+
+	return ((struct slab *)new_slab);
 }
 
 void slab_ticker_destroy(struct slab *slab)
@@ -56,6 +58,8 @@ void slab_ticker_destroy(struct slab *slab)
 	
 	k_timer_stop(&ticker->tick_timer);
 	k_work_cancel(&ticker->tick_work);
+
+	k_free(slab);
 }
 
 void slab_ticker_stim(struct slab *slab, struct slab_event *evt)
@@ -74,6 +78,7 @@ void slab_ticker_stim(struct slab *slab, struct slab_event *evt)
 
 	case SLAB_EVENT_TICK:
 		/* Stop propagation */
+		slab_event_release(evt);
 		break;
 	
 	default:

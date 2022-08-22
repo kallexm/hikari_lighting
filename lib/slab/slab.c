@@ -10,6 +10,7 @@
 #include "slabs/slab_glower.h"
 #include "slabs/slab_hsv2rgb.h"
 #include "slabs/slab_rgb2hsv.h"
+#include "slabs/slab_notifier.h"
 
 struct slab_child {
 	sys_dnode_t root;
@@ -36,22 +37,29 @@ struct slab *slab_create(enum slab_type type, ...)
 		break;
 	}
 	case SLAB_TYPE_TICKER: {
-		uint32_t timer_period = va_arg(args, uint32_t);
+		k_timeout_t timer_period = va_arg(args, k_timeout_t);
 		new_slab = slab_ticker_create(timer_period);
+		break;
 	}
 	case SLAB_TYPE_GLOWER: {
 		struct slab_glower_config *conf = va_arg(args, struct slab_glower_config *);
 		new_slab = slab_glower_create(conf);
 		break;
 	}
-	case SLAB_TYPE_HSV2RGB:
+	case SLAB_TYPE_HSV2RGB: {
 		new_slab = slab_hsv2rgb_create();
 		break;
-
-	case SLAB_TYPE_RGB2HSV:
+	}
+	case SLAB_TYPE_RGB2HSV: {
 		new_slab = slab_rgb2hsv_create();
 		break;
-
+	}
+	case SLAB_TYPE_NOTIFIER: {
+		slab_notifier_cb subcriber = va_arg(args, slab_notifier_cb);
+		void *context = va_arg(args, void *);
+		new_slab = slab_notifier_create(subcriber, context);
+		break;
+	}
 	default:
 		new_slab = NULL;
 		goto clean_exit;
@@ -94,6 +102,7 @@ void slab_destroy(struct slab *slab)
 
 	case SLAB_TYPE_TICKER:
 		slab_ticker_destroy(slab);
+		break;
 
 	case SLAB_TYPE_GLOWER:
 		slab_glower_destroy(slab);
@@ -106,6 +115,9 @@ void slab_destroy(struct slab *slab)
 	case SLAB_TYPE_RGB2HSV:
 		slab_rgb2hsv_destroy(slab);
 		break;
+
+	case SLAB_TYPE_NOTIFIER:
+		slab_notifier_destroy(slab);
 
 	default:
 		/* Silently ignore */
@@ -191,6 +203,7 @@ void slab_stim(struct slab *slab, struct slab_event *evt)
 
 	case SLAB_TYPE_TICKER:
 		slab_ticker_stim(slab, evt);
+		break;
 
 	case SLAB_TYPE_GLOWER:
 		slab_glower_stim(slab, evt);
@@ -202,6 +215,10 @@ void slab_stim(struct slab *slab, struct slab_event *evt)
 
 	case SLAB_TYPE_RGB2HSV:
 		slab_rgb2hsv_stim(slab, evt);
+		break;
+
+	case SLAB_TYPE_NOTIFIER:
+		slab_notifier_stim(slab, evt);
 		break;
 
 	default:

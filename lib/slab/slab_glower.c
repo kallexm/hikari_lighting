@@ -53,6 +53,8 @@ void slab_glower_stim(struct slab *slab, struct slab_event *evt)
 		glower_slab->data.v = glow_func_process(glower_slab->gen, time, rand_val);
 
 		struct slab_event *hsv_evt = slab_event_create(SLAB_EVENT_HSV, glower_slab->data);
+		slab_event_acquire(hsv_evt);
+
 		slab_stim_childs(slab, hsv_evt);
 
 		slab_stim_childs(slab, evt);
@@ -61,5 +63,6 @@ void slab_glower_stim(struct slab *slab, struct slab_event *evt)
 
 	default:
 		slab_stim_childs(slab, evt);
+		break;
 	}
 }

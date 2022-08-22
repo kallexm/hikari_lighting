@@ -21,14 +21,18 @@ void slab_hsv2rgb_stim(struct slab *slab, struct slab_event *evt)
 	switch (evt->id) {
 	case SLAB_EVENT_HSV: {
 		struct hsv_value hsv_val = slab_event_hsv_get_val(evt);
+		slab_event_release(evt);
 
 		struct rgb_value rgb_val = hsv2rgb(hsv_val);
 
 		struct slab_event *rgb_evt = slab_event_create(SLAB_EVENT_RGB, rgb_val);
+		slab_event_acquire(rgb_evt);
+
 		slab_stim_childs(slab, rgb_evt);
 		break;
 	}
 	default:
 		slab_stim_childs(slab, evt);
+		break;
 	}
 }

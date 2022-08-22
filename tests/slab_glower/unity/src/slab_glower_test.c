@@ -91,6 +91,7 @@ void test_slab_glower_stim_tick(void)
 	 */
 	__wrap_glow_func_process_ExpectAndReturn(&gf, 2765, 0.3554688, 0.2);
 	__wrap_slab_event_create_ExpectAndReturn(SLAB_EVENT_HSV, hsv_evt);
+	__wrap_slab_event_acquire_Expect(hsv_evt);
 	__wrap_slab_stim_childs_Expect(s, hsv_evt);
 	__wrap_slab_stim_childs_Expect(s, evt);
 	slab_glower_stim(s, evt);

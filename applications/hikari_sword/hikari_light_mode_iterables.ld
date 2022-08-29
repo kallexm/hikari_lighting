@@ -1,0 +1,1 @@
+ITERABLE_SECTION_ROM(hikari_light_mode_entry, 4)

@@ -27,7 +27,7 @@ struct slab *slab_create(enum slab_type type, ...)
 	switch(type) {
 	case SLAB_TYPE_LED: {
 		struct rgb_value *val = va_arg(args, struct rgb_value *);
-		enum led_type led_type = va_arg(args, enum led_type);
+		enum led_type led_type = va_arg(args, int);
 		new_slab = slab_led_create(val, led_type);
 		break;
 	}

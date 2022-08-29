@@ -87,6 +87,6 @@ void slab_stim(struct slab *slab, struct slab_event *evt);
   * prior to this, the event will be destroyed at the end of
   * this function.
   */
-void slab_stim_child(struct slab *slab, struct slab_event *evt);
+void slab_stim_childs(struct slab *slab, struct slab_event *evt);
 
 #endif /* SLAB_H__ */

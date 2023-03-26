@@ -11,6 +11,9 @@ target_sources(app PRIVATE
 	src/hikari_light.c
 	src/light_resource.c
 	src/modes/glow.c
+	src/modes/sole.c
+	src/modes/off.c
+	src/modes/wave.c
 )
 
 zephyr_linker_sources(SECTIONS hikari_light_mode_iterables.ld)

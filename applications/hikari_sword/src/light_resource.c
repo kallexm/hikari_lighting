@@ -8,6 +8,8 @@
 static sys_dlist_t resources;
 static bool is_initialized = false;
 
+#define LIGHT_RESOURCE_UPDATE_PERIOD_MS 25
+
 /*==============================[Private methods]=============================*/
 static bool is_overlapping(uint8_t *p1, size_t l1, uint8_t *p2, size_t l2)
 {
@@ -22,11 +24,11 @@ static bool register_resource(char *id, uint8_t *data, size_t data_size)
 	struct light_resource *res_elem;
 	int id_already_exist;
 	bool data_overlapping;
-	
+
 	SYS_DLIST_FOR_EACH_NODE(&resources, elem) {
 		res_elem = CONTAINER_OF(elem, struct light_resource, root);
 
-		id_already_exist = strcmp(res_elem->id, id);
+		id_already_exist = !strcmp(res_elem->id, id);
 		data_overlapping = is_overlapping(data, data_size, res_elem->data, res_elem->data_size);
 		if (id_already_exist || data_overlapping) {
 			return false;
@@ -47,7 +49,7 @@ static bool register_resource(char *id, uint8_t *data, size_t data_size)
 }
 
 /*==============================[Setup resources]=============================*/
-#define CHAIN_1_NUM   3
+#define CHAIN_1_NUM   4
 #define CHAIN_1_PIN  11
 #define CHAIN_1_PORT  1
 RGB_CHAIN_DEF(chain_1, CHAIN_1_NUM, CHAIN_1_PIN, CHAIN_1_PORT, true);
@@ -71,17 +73,82 @@ static void setup_light_resources(void)
 	//	k_oops();
 	//}
 
-	ret = 0;
 	rgb_t *c10 = &(chain_1.rgb_values[0]);
 	rgb_t *c11 = &(chain_1.rgb_values[1]);
 	rgb_t *c12 = &(chain_1.rgb_values[2]);
-	ret |= register_resource("L1", (uint8_t *)c10, sizeof(rgb_t));
-	ret |= register_resource("L2", (uint8_t *)c11, sizeof(rgb_t));
-	ret |= register_resource("L3", (uint8_t *)c12, sizeof(rgb_t));
-	if (ret) {
+	rgb_t *c13 = &(chain_1.rgb_values[3]);
+
+	c10->red = 255;
+	c10->green = 0;
+	c10->blue = 0;
+
+	c11->red = 0;
+	c11->green = 255;
+	c11->blue = 0;
+
+	c12->red = 0;
+	c12->green = 0;
+	c12->blue = 255;
+
+	c13->red = 85;
+	c13->green = 85;
+	c13->blue = 85;
+
+	do {
+		ret = adrledrgb_update_leds(&chain_1);
+		if (ret) {
+			k_msleep(1);
+		}
+	} while (ret != 0);
+
+	ret = 0;
+	ret = register_resource("L1", (uint8_t *)c10, sizeof(rgb_t));
+	if (!ret) {
+		k_oops();
+	}
+	ret = register_resource("L2", (uint8_t *)c11, sizeof(rgb_t));
+	if (!ret) {
+		k_oops();
+	}
+	ret = register_resource("L3", (uint8_t *)c12, sizeof(rgb_t));
+	if (!ret) {
+		k_oops();
+	}
+	ret = register_resource("L4", (uint8_t *)c13, sizeof(rgb_t));
+	if (!ret) {
 		k_oops();
 	}
 }
+
+/*==============================[Light Update Thread]========================*/
+K_SEM_DEFINE(light_init_sem, 0, 1);
+
+#define LIGHT_UPDATE_THREAD_STACK_SIZE 512
+#define LIGHT_UPDATE_THREAD_PRIORITY 5
+#define LIGHT_UPDATE_THREAD_START_DELAY_MS 500
+
+static void light_update_loop(void *p1, void *p2, void *p3)
+{
+	int ret;
+
+	k_sem_take(&light_init_sem, K_FOREVER);
+
+	while (1) {
+		do {
+			ret = adrledrgb_update_leds(&chain_1);
+			if (ret) {
+				k_msleep(1);
+			}
+		} while (ret != 0);
+
+		k_sleep(K_MSEC(LIGHT_RESOURCE_UPDATE_PERIOD_MS));
+	}
+}
+
+K_THREAD_DEFINE(light_update_thread, LIGHT_UPDATE_THREAD_STACK_SIZE,
+				light_update_loop, NULL, NULL, NULL,
+				LIGHT_UPDATE_THREAD_PRIORITY, 0,
+				LIGHT_UPDATE_THREAD_START_DELAY_MS);
 
 /*==============================[Public methods]==============================*/
 void light_resource_init(void)
@@ -94,6 +161,8 @@ void light_resource_init(void)
 	sys_dlist_init(&resources);
 
 	setup_light_resources();
+
+	k_sem_give(&light_init_sem);
 }
 
 light_res_err_t light_resource_use(char *id, struct light_resource **res)

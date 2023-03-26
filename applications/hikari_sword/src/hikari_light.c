@@ -22,10 +22,10 @@ struct action_item {
 	enum action_type type;
 	union {
 		enum hikari_light_mode mode;
-		uint8_t hue;
-		uint8_t saturation;
-		uint8_t value;
-		uint8_t speed;
+		float hue;
+		float saturation;
+		float value;
+		float speed;
 	};
 };
 
@@ -40,7 +40,7 @@ static void empty_action_fifo(void)
 
 /*==============================[Singleton members]===========================*/
 static enum hikari_light_mode mode;
-static struct hikari_light_mode_api *api;
+static struct hikari_light_mode_api *api = NULL;
 
 static K_SEM_DEFINE(num_threads_posting_actions, 0, K_SEM_MAX_LIMIT);
 static bool accepting_new_actions = true;
@@ -50,6 +50,8 @@ static bool accepting_new_actions = true;
 static void post_action(enum action_type type, void *action_data)
 {
 	struct action_item *action = NULL;
+
+	printk("Action posted: %d\n", type);
 
 	/* Return if new actions are not to be accepted. */
 	if (!accepting_new_actions) {
@@ -72,19 +74,19 @@ static void post_action(enum action_type type, void *action_data)
 		break;
 
 	case ACTION_TYPE_TWEAK_COLOR:
-		action->hue = *((uint8_t *)action_data);
+		action->hue = *((float *)action_data);
 		break;
 
 	case ACTION_TYPE_TWEAK_INTENSITY:
-		action->saturation = *((uint8_t *)action_data);
+		action->saturation = *((float *)action_data);
 		break;
 
 	case ACTION_TYPE_TWEAK_GAIN:
-		action->value = *((uint8_t *)action_data);
+		action->value = *((float *)action_data);
 		break;
 
 	case ACTION_TYPE_TWEAK_SPEED:
-		action->speed = *((uint8_t *)action_data);
+		action->speed = *((float *)action_data);
 		break;
 
 	default:
@@ -94,6 +96,8 @@ static void post_action(enum action_type type, void *action_data)
 		return;
 	}
 	action->type = type;
+
+	printk("Add to action queue\n");
 
 	/* Queue action. */
 	k_fifo_put(&action_fifo, action);
@@ -105,11 +109,14 @@ static void post_action(enum action_type type, void *action_data)
 static struct hikari_light_mode_api *get_mode_api(enum hikari_light_mode mode) 
 {
 	STRUCT_SECTION_FOREACH(hikari_light_mode_entry, entry) {
-		if (entry->mode != mode) {
+		printk("get_mode_api entry mode: %d\n", entry->mode);
+
+		if (entry->mode == mode) {
 			return entry->api;
 		}
 	}
 
+	printk("Did not find mode %d\n", mode);
 	return NULL;
 }
 
@@ -125,21 +132,31 @@ static void try_switching_mode(enum hikari_light_mode new_mode)
 {
 	struct hikari_light_mode_api *new_api = NULL;
 
+	if (new_mode == mode) {
+		printk("Mode %d already set\n", new_mode);
+		return;
+	}
+
 	/* Check if mode is implemented. */
 	new_api = get_mode_api(new_mode);
 	if (new_api == NULL || 
 		new_api->constructor == NULL ||
 		new_api->destructor == NULL) {
 		/* Do not switch mode. */
+
+		printk("Do not switch mode\n");
 		return;
 	}
+
+	printk("Switching to mode %d from %d\n", new_mode, mode);
 
 	accepting_new_actions = false;
 
 	/* Switch mode. */
-	if (api->destructor != NULL) {
+	if (api != NULL && api->destructor != NULL) {
 		api->destructor();
-	}	
+	}
+
 	new_api->constructor();
 	mode = new_mode;
 	api = new_api;
@@ -160,6 +177,8 @@ static inline void hikari_light_process(struct action_item *action)
 	if (action == NULL) {
 		k_oops();
 	}
+
+	printk("Dequeueing action: %d\n", action->type);
 
 	switch (action->type) {
 	case ACTION_TYPE_MODE_SET:
@@ -220,22 +239,22 @@ enum hikari_light_mode hikari_light_mode_get(void)
 	return mode;
 }
 
-void hikari_light_tweak_color(uint8_t hue)
+void hikari_light_tweak_color(float hue)
 {
 	post_action(ACTION_TYPE_TWEAK_COLOR, (void *)&hue);
 }
 
-void hikari_light_tweak_intensity(uint8_t saturation)
+void hikari_light_tweak_intensity(float saturation)
 {
 	post_action(ACTION_TYPE_TWEAK_INTENSITY, (void *)&saturation);
 }
 
-void hikari_light_tweak_gain(uint8_t value)
+void hikari_light_tweak_gain(float value)
 {
 	post_action(ACTION_TYPE_TWEAK_GAIN, (void *)&value);
 }
 
-void hikari_light_tweak_speed(uint8_t speed)
+void hikari_light_tweak_speed(float speed)
 {
 	post_action(ACTION_TYPE_TWEAK_SPEED, (void *)&speed);
 }

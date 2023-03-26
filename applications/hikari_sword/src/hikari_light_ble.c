@@ -28,8 +28,8 @@ static struct bt_uuid_128 detector_state_chrc_uuid = BT_UUID_INIT_128(DETECTOR_S
 static ssize_t read_mode(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 						 void *buf, uint16_t len, uint16_t offset)
 {
-	//enum hikari_light_mode mode = hikari_light_mode_get();
-	enum hikari_light_mode mode = 23;
+	enum hikari_light_mode mode = hikari_light_mode_get();
+	printk("Reading light mode: %d\n", (int)mode);
 
 	return bt_gatt_attr_read(conn, attr, buf, len, offset, (uint8_t *)&mode, sizeof(uint8_t));
 }
@@ -42,7 +42,8 @@ static ssize_t write_mode(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 	}
 
 	enum hikari_light_mode mode = ((uint8_t *)buf)[0];
-	//hikari_light_mode_set(mode);
+	printk("Writing light mode: %d\n", (int)mode);
+	hikari_light_mode_set(mode);
 
 	return len;
 }
@@ -69,13 +70,42 @@ static ssize_t read_conf(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 static ssize_t write_conf(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 						  const void *buf, uint16_t len, uint16_t offset, uint8_t flags)
 {
-	uint8_t *conf_ptr = (uint8_t *)attr->user_data;
+	static uint8_t tweak_type;
+	float tweak_value;
+	uint8_t *byte_buf = (uint8_t *)buf;
 
-	if (offset + len > sizeof(uint8_t)) {
+	if (len == sizeof(uint8_t)) {
+		memcpy(&tweak_type, &byte_buf[0], sizeof(uint8_t));
+		printk("tweak type: %d\n", tweak_type);
+		return len;
+	} else if (len == sizeof(float)) {
+		memcpy(&tweak_value, &byte_buf[0], sizeof(float));
+		printk("tweak value: %f\n", tweak_value);
+	} else {
 		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
 	}
 
-	memcpy(conf_ptr + offset, buf, len);
+	switch (tweak_type) {
+	case 1:
+		hikari_light_tweak_color(tweak_value);
+		break;
+
+	case 2:
+		hikari_light_tweak_intensity(tweak_value);
+		break;
+
+	case 3:
+		hikari_light_tweak_gain(tweak_value);
+		break;
+
+	case 4:
+		hikari_light_tweak_speed(tweak_value);
+		break;
+
+	default:
+		return BT_GATT_ERR(BT_ATT_ERR_NOT_SUPPORTED);
+		break;
+	}
 
 	return len;
 }

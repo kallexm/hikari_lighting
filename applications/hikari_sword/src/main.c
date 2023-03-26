@@ -8,7 +8,7 @@
 
 #include <drivers/gpio.h>
 
-#define SLEEP_TIME_MS   500
+#define SLEEP_TIME_MS   100
 
 /* Debug led */
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
@@ -63,12 +63,12 @@ void main(void)
 
 	printk("Starting Hikari Light Application\n");
 
-	//light_resource_init();
+	light_resource_init();
 
 	gpio_pin_set_dt(&led, 0);
 	while (1) {
 		counter += 1;
-		printk("Loop %d\n", counter);
+		//printk("Loop %d\n", counter);
 
 		gpio_pin_toggle_dt(&led);
 		k_msleep(SLEEP_TIME_MS);

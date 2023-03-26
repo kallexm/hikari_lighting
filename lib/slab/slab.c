@@ -8,6 +8,7 @@
 #include "slabs/slab_delay.h"
 #include "slabs/slab_ticker.h"
 #include "slabs/slab_glower.h"
+#include "slabs/slab_waver.h"
 #include "slabs/slab_hsv2rgb.h"
 #include "slabs/slab_rgb2hsv.h"
 #include "slabs/slab_notifier.h"
@@ -44,6 +45,11 @@ struct slab *slab_create(enum slab_type type, ...)
 	case SLAB_TYPE_GLOWER: {
 		struct slab_glower_config *conf = va_arg(args, struct slab_glower_config *);
 		new_slab = slab_glower_create(conf);
+		break;
+	}
+	case SLAB_TYPE_WAVER: {
+		struct slab_waver_config *conf = va_arg(args, struct slab_waver_config *);
+		new_slab = slab_waver_create(conf);
 		break;
 	}
 	case SLAB_TYPE_HSV2RGB: {
@@ -108,6 +114,10 @@ void slab_destroy(struct slab *slab)
 		slab_glower_destroy(slab);
 		break;
 
+	case SLAB_TYPE_WAVER:
+		slab_waver_destroy(slab);
+		break;
+
 	case SLAB_TYPE_HSV2RGB:
 		slab_hsv2rgb_destroy(slab);
 		break;
@@ -118,6 +128,7 @@ void slab_destroy(struct slab *slab)
 
 	case SLAB_TYPE_NOTIFIER:
 		slab_notifier_destroy(slab);
+		break;
 
 	default:
 		/* Silently ignore */
@@ -207,6 +218,10 @@ void slab_stim(struct slab *slab, struct slab_event *evt)
 
 	case SLAB_TYPE_GLOWER:
 		slab_glower_stim(slab, evt);
+		break;
+
+	case SLAB_TYPE_WAVER:
+		slab_waver_stim(slab, evt);
 		break;
 
 	case SLAB_TYPE_HSV2RGB:

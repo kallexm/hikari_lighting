@@ -59,7 +59,8 @@ void slab_delay_stim(struct slab *slab, struct slab_event *evt)
 		break;
 
 	case SLAB_EVENT_RGB:
-	case SLAB_EVENT_HSV: {
+	case SLAB_EVENT_HSV:
+	case SLAB_EVENT_TICK: {
 		struct slab_event *evt_to_send = (struct slab_event *)process_delay(delay_slab, evt);
 		if (evt_to_send != NULL) {
 			slab_stim_childs(slab, evt_to_send);

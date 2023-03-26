@@ -11,6 +11,7 @@ typedef enum {
 	LIGHT_RESOURCE_NOT_FOUND = 1,
 	LIGHT_RESOURCE_ALLREADY_USED = 2,
 	LIGHT_RESOURCE_INSUFFICIENT_MEMORY = 3,
+	LIGHT_RESOURCE_NOT_INITIALIZED = 4,
 } light_res_err_t;
 
 struct light_resource {

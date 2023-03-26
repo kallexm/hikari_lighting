@@ -4,7 +4,7 @@
 #include "hikari_light.h"
 
 #include "slab.h"
-#include "slabs/slab_glower.h"
+#include "slabs/slab_waver.h"
 #include "slabs/slab_led.h"
 #include "slabs/slab_notifier.h"
 
@@ -19,7 +19,7 @@ static struct light_resource *l4;
 
 /* Slabs */
 static struct slab *st;
-static struct slab *sg;
+static struct slab *sw;
 static struct slab *sc;
 static struct slab *sd1;
 static struct slab *sd2;
@@ -40,7 +40,7 @@ static void print_callback(struct slab_event *evt, void *ctx)
 	}
 }
 
-static void glow_constructor(void)
+static void wave_constructor(void)
 {
 	light_res_err_t res_err = 0;
 
@@ -48,19 +48,18 @@ static void glow_constructor(void)
 			  | light_resource_use("L2", &l2)
 			  | light_resource_use("L3", &l3)
 			  | light_resource_use("L4", &l4);
-
 	if (res_err) {
 		printk("resource use err %d", res_err);
 		k_oops();
 	}
 
-	struct slab_glower_config sg_config = {
+	struct slab_waver_config sw_config = {
 		.hue = 130, .sat = 0.9,
-		.val = {.a = 0.25, .b = 0.25, .ym = 0.3, .yd = 4.0}
+		.val = {.T = 200, .ym = 0.4, .yd = 0.2 }
 	};
 
 	st = slab_create(SLAB_TYPE_TICKER, K_MSEC(25));
-	sg = slab_create(SLAB_TYPE_GLOWER, &sg_config);
+	sw = slab_create(SLAB_TYPE_WAVER, &sw_config);
 	sc = slab_create(SLAB_TYPE_HSV2RGB);
 	sd1 = slab_create(SLAB_TYPE_DELAY, 20);
 	sd2 = slab_create(SLAB_TYPE_DELAY, 20);
@@ -71,10 +70,10 @@ static void glow_constructor(void)
 	sl4 = slab_create(SLAB_TYPE_LED, l4->data, LED_TYPE_RGB);
 
 	cb1 = slab_create(SLAB_TYPE_NOTIFIER, print_callback, NULL);
-	slab_connect(cb1, sl3);
+	slab_connect(cb1, sl4);
 
-	slab_connect(sg, st);
-	slab_connect(sc, sg);
+	slab_connect(sw, st);
+	slab_connect(sc, sw);
 
 	slab_connect(sd1, sc);
 	slab_connect(sl1, sc);
@@ -88,7 +87,7 @@ static void glow_constructor(void)
 	slab_connect(sl4, sd3);
 }
 
-static void glow_destructor(void)
+static void wave_destructor(void)
 {
 	light_res_err_t res_err = 0;
 
@@ -104,7 +103,7 @@ static void glow_destructor(void)
 	slab_destroy(sd1);
 
 	slab_destroy(sc);
-	slab_destroy(sg);
+	slab_destroy(sw);
 	slab_destroy(st);
 
 	res_err = light_resource_return(l1)
@@ -118,7 +117,7 @@ static void glow_destructor(void)
 	}
 }
 
- void glow_reset(void)
+void wave_reset(void)
 {
 	slab_stim(st, slab_event_create(SLAB_EVENT_RESET));
 }
@@ -126,33 +125,33 @@ static void glow_destructor(void)
 /* Tweak function implementation could be dropped.
    In this case, posting a tweak event will do nothing. */
 
-/*void glow_tweak_color(float hue)
+/*void wave_tweak_color(float hue)
 {
 
 }
 
-void glow_tweak_intensity(float saturation)
+void wave_tweak_intensity(float saturation)
 {
 
 }
 
-void glow_tweak_gain(float value)
+void wave_tweak_gain(float value)
 {
 
 }
 
-void glow_tweak_speed(float speed)
+void wave_tweak_speed(float speed)
 {
 
 }*/
 
-static struct hikari_light_mode_api glow_api = {
-	.constructor = glow_constructor,
-	.destructor = glow_destructor,
+static struct hikari_light_mode_api wave_api = {
+	.constructor = wave_constructor,
+	.destructor = wave_destructor,
 	.tweak_color = NULL,
 	.tweak_intensity = NULL,
 	.tweak_gain = NULL,
 	.tweak_speed = NULL
 };
 
-DEFINE_HIKARI_LIGHT_MODE(glow, HIKARI_LIGHT_MODE_GLOW, glow_api);
+DEFINE_HIKARI_LIGHT_MODE(wave, HIKARI_LIGHT_MODE_WAVE, wave_api);

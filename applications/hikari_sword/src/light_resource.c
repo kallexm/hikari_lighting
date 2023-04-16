@@ -49,72 +49,104 @@ static bool register_resource(char *id, uint8_t *data, size_t data_size)
 }
 
 /*==============================[Setup resources]=============================*/
-#define CHAIN_1_NUM   4
-#define CHAIN_1_PIN  11
-#define CHAIN_1_PORT  1
-RGB_CHAIN_DEF(chain_1, CHAIN_1_NUM, CHAIN_1_PIN, CHAIN_1_PORT, true);
+#define CHAIN_POMMEL_NUM 2
+#define CHAIN_POMMEL_PIN 11 /* D2 */
+#define CHAIN_POMMEL_PORT 1
+RGB_CHAIN_DEF(chain_P, CHAIN_POMMEL_NUM, CHAIN_POMMEL_PIN, CHAIN_POMMEL_PORT, false);
 
-//#define CHAIN_2_NUM  14
-//#define CHAIN_2_PIN  12
-//#define CHAIN_2_PORT  1
-//RGB_CHAIN_DEF(chain_2, CHAIN_2_NUM, CHAIN_2_PIN, CHAIN_2_PORT, true);
+#define CHAIN_CORE_NUM 8
+#define CHAIN_CORE_PIN 12 /* D3 */
+#define CHAIN_CORE_PORT 1
+RGB_CHAIN_DEF(chain_C, CHAIN_CORE_NUM, CHAIN_CORE_PIN, CHAIN_CORE_PORT, true);
+
+#define CHAIN_INNER_BLADE_NUM 8
+#define CHAIN_INNER_BLADE_PIN 15 /* D4 */
+#define CHAIN_INNER_BLADE_PORT 1
+RGB_CHAIN_DEF(chain_IB, CHAIN_INNER_BLADE_NUM, CHAIN_INNER_BLADE_PIN, CHAIN_INNER_BLADE_PORT, true);
+
+#define CHAIN_LEFT_BLADE_NUM 14
+#define CHAIN_LEFT_BLADE_PIN 13 /* D5 */
+#define CHAIN_LEFT_BLADE_PORT 1
+RGB_CHAIN_DEF(chain_LB, CHAIN_LEFT_BLADE_NUM, CHAIN_LEFT_BLADE_PIN, CHAIN_LEFT_BLADE_PORT, true);
+
+#define CHAIN_RIGHT_BLADE_NUM 14
+#define CHAIN_RIGHT_BLADE_PIN 14 /* D6 */
+#define CHAIN_RIGHT_BLADE_PORT 1
+RGB_CHAIN_DEF(chain_RB, CHAIN_RIGHT_BLADE_NUM, CHAIN_RIGHT_BLADE_PIN, CHAIN_RIGHT_BLADE_PORT, true);
+
+#define CHAIN_LEFT_GUARD_NUM 4
+#define CHAIN_LEFT_GUARD_PIN 23 /* D7 */
+#define CHAIN_LEFT_GUARD_PORT 0
+RGB_CHAIN_DEF(chain_LG, CHAIN_LEFT_GUARD_NUM, CHAIN_LEFT_GUARD_PIN, CHAIN_LEFT_GUARD_PORT, true);
+
+#define CHAIN_RIGHT_GUARD_NUM 4
+#define CHAIN_RIGHT_GUARD_PIN 21 /* D8 */
+#define CHAIN_RIGHT_GUARD_PORT 0
+RGB_CHAIN_DEF(chain_RG, CHAIN_RIGHT_GUARD_NUM, CHAIN_RIGHT_GUARD_PIN, CHAIN_RIGHT_GUARD_PORT, true);
+
+#define CHAIN_LEFT_SPIKE_NUM 3
+#define CHAIN_LEFT_SPIKE_PIN 27 /* D9 */
+#define CHAIN_LEFT_SPIKE_PORT 1
+RGB_CHAIN_DEF(chain_LS, CHAIN_LEFT_SPIKE_NUM, CHAIN_LEFT_SPIKE_PIN, CHAIN_LEFT_SPIKE_PORT, false);
+
+#define CHAIN_RIGHT_SPIKE_NUM 3
+#define CHAIN_RIGHT_SPIKE_PIN 2 /* D10 */
+#define CHAIN_RIGHT_SPIKE_PORT 1
+RGB_CHAIN_DEF(chain_RS, CHAIN_RIGHT_SPIKE_NUM, CHAIN_RIGHT_SPIKE_PIN, CHAIN_RIGHT_SPIKE_PORT, false);
+
+rgb_chain_t *chains[9] = {&chain_P, &chain_C, &chain_IB, &chain_LB, &chain_RB,
+						  &chain_LG, &chain_RG, &chain_LS, &chain_RS};
+
+#define INIT_COLOR(_chain, _num, _red, _green, _blue) \
+    for (uint32_t i = 0; i < _num; i++) {             \
+		_chain.rgb_values[i].red = _red;              \
+		_chain.rgb_values[i].green = _green;          \
+		_chain.rgb_values[i].blue = _blue;            \
+	}
 
 static void setup_light_resources(void)
 {
 	int ret;
 
-	ret = adrledrgb_init(&chain_1);
-	if (ret < 0) {
-		k_oops();
-	}
-
-	//ret = adrledrgb_init(&chain_2);
-	//if (ret < 0) {
-	//	k_oops();
-	//}
-
-	rgb_t *c10 = &(chain_1.rgb_values[0]);
-	rgb_t *c11 = &(chain_1.rgb_values[1]);
-	rgb_t *c12 = &(chain_1.rgb_values[2]);
-	rgb_t *c13 = &(chain_1.rgb_values[3]);
-
-	c10->red = 255;
-	c10->green = 0;
-	c10->blue = 0;
-
-	c11->red = 0;
-	c11->green = 255;
-	c11->blue = 0;
-
-	c12->red = 0;
-	c12->green = 0;
-	c12->blue = 255;
-
-	c13->red = 85;
-	c13->green = 85;
-	c13->blue = 85;
-
-	do {
-		ret = adrledrgb_update_leds(&chain_1);
-		if (ret) {
-			k_msleep(1);
+	for (uint32_t i = 0; i < sizeof(chains)/sizeof(rgb_chain_t *); i++) {
+		ret = adrledrgb_init(chains[i]);
+		if (ret < 0) {
+			k_oops();
 		}
-	} while (ret != 0);
+	}
 
-	ret = 0;
-	ret = register_resource("L1", (uint8_t *)c10, sizeof(rgb_t));
+	INIT_COLOR(chain_P, CHAIN_POMMEL_NUM, 40, 40, 40);
+	INIT_COLOR(chain_C, CHAIN_CORE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_IB, CHAIN_INNER_BLADE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_LB, CHAIN_LEFT_BLADE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_RB, CHAIN_RIGHT_BLADE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_LG, CHAIN_LEFT_GUARD_NUM, 40, 40, 40);
+	INIT_COLOR(chain_RG, CHAIN_RIGHT_GUARD_NUM, 40, 40, 40);
+	INIT_COLOR(chain_LS, CHAIN_LEFT_SPIKE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_RS, CHAIN_RIGHT_SPIKE_NUM, 40, 40, 40);
+
+	for (uint32_t i = 0; i < sizeof(chains)/sizeof(rgb_chain_t *); i++) {
+		do {
+			ret = adrledrgb_update_leds(chains[i]);
+			if (ret) {
+				k_msleep(1);
+			}
+		} while (ret != 0);
+	}
+
+	ret = register_resource("L1", (uint8_t *)&(chain_LG.rgb_values[0]), sizeof(rgb_t));
 	if (!ret) {
 		k_oops();
 	}
-	ret = register_resource("L2", (uint8_t *)c11, sizeof(rgb_t));
+	ret = register_resource("L2", (uint8_t *)&(chain_LG.rgb_values[1]), sizeof(rgb_t));
 	if (!ret) {
 		k_oops();
 	}
-	ret = register_resource("L3", (uint8_t *)c12, sizeof(rgb_t));
+	ret = register_resource("L3", (uint8_t *)&(chain_LG.rgb_values[2]), sizeof(rgb_t));
 	if (!ret) {
 		k_oops();
 	}
-	ret = register_resource("L4", (uint8_t *)c13, sizeof(rgb_t));
+	ret = register_resource("L4", (uint8_t *)&(chain_LG.rgb_values[3]), sizeof(rgb_t));
 	if (!ret) {
 		k_oops();
 	}
@@ -134,12 +166,15 @@ static void light_update_loop(void *p1, void *p2, void *p3)
 	k_sem_take(&light_init_sem, K_FOREVER);
 
 	while (1) {
-		do {
-			ret = adrledrgb_update_leds(&chain_1);
-			if (ret) {
-				k_msleep(1);
-			}
-		} while (ret != 0);
+
+		for (uint32_t i = 0; i < sizeof(chains)/sizeof(rgb_chain_t *); i++) {
+			do {
+				ret = adrledrgb_update_leds(chains[i]);
+				if (ret) {
+					k_msleep(1);
+				}
+			} while (ret != 0);
+		}
 
 		k_sleep(K_MSEC(LIGHT_RESOURCE_UPDATE_PERIOD_MS));
 	}

@@ -104,6 +104,11 @@ rgb_chain_t *chains[9] = {&chain_P, &chain_C, &chain_IB, &chain_LB, &chain_RB,
 		_chain.rgb_values[i].blue = _blue;            \
 	}
 
+#define REGISTER_RGB(_name, _chain, _idx)                                                  \
+	if (!register_resource(_name, (uint8_t *)&(_chain.rgb_values[_idx]), sizeof(rgb_t))) { \
+		k_oops();                                                                          \
+	}
+
 static void setup_light_resources(void)
 {
 	int ret;
@@ -134,22 +139,80 @@ static void setup_light_resources(void)
 		} while (ret != 0);
 	}
 
-	ret = register_resource("L1", (uint8_t *)&(chain_LG.rgb_values[0]), sizeof(rgb_t));
-	if (!ret) {
-		k_oops();
-	}
-	ret = register_resource("L2", (uint8_t *)&(chain_LG.rgb_values[1]), sizeof(rgb_t));
-	if (!ret) {
-		k_oops();
-	}
-	ret = register_resource("L3", (uint8_t *)&(chain_LG.rgb_values[2]), sizeof(rgb_t));
-	if (!ret) {
-		k_oops();
-	}
-	ret = register_resource("L4", (uint8_t *)&(chain_LG.rgb_values[3]), sizeof(rgb_t));
-	if (!ret) {
-		k_oops();
-	}
+	REGISTER_RGB("pommel_f", chain_P, 0);
+	REGISTER_RGB("pommel_b", chain_P, 1);
+
+	REGISTER_RGB("core_f1", chain_C, 0);
+	REGISTER_RGB("core_f2", chain_C, 1);
+	REGISTER_RGB("core_f3", chain_C, 2);
+	REGISTER_RGB("core_b1", chain_C, 3);
+	REGISTER_RGB("core_b2", chain_C, 4);
+	REGISTER_RGB("core_b3", chain_C, 5);
+	REGISTER_RGB("square_f", chain_C, 6);
+	REGISTER_RGB("square_b", chain_C, 7);
+
+	REGISTER_RGB("midstar_f1", chain_IB, 0);
+	REGISTER_RGB("midstar_f2", chain_IB, 1);
+	REGISTER_RGB("midstar_f3", chain_IB, 2);
+	REGISTER_RGB("midstar_b1", chain_IB, 3);
+	REGISTER_RGB("midstar_b2", chain_IB, 4);
+	REGISTER_RGB("midstar_b3", chain_IB, 5);
+	REGISTER_RGB("tipstar_l", chain_IB, 6);
+	REGISTER_RGB("tipstar_r", chain_IB, 7);
+
+	REGISTER_RGB("Lblade_b1", chain_LB, 0);
+	REGISTER_RGB("Lblade_b2", chain_LB, 1);
+	REGISTER_RGB("Lblade_m1", chain_LB, 2);
+	REGISTER_RGB("Lblade_m2", chain_LB, 3);
+	REGISTER_RGB("Lblade_t1", chain_LB, 4);
+	REGISTER_RGB("Lblade_t2", chain_LB, 5);
+	REGISTER_RGB("Ltriangle_f4", chain_LB, 6);
+	REGISTER_RGB("Ltriangle_f3", chain_LB, 7);
+	REGISTER_RGB("Ltriangle_f2", chain_LB, 8);
+	REGISTER_RGB("Ltriangle_f1", chain_LB, 9);
+	REGISTER_RGB("Ltriangle_b1", chain_LB, 10);
+	REGISTER_RGB("Ltriangle_b2", chain_LB, 11);
+	REGISTER_RGB("Ltriangle_b3", chain_LB, 12);
+	REGISTER_RGB("Ltriangle_b4", chain_LB, 13);
+
+	REGISTER_RGB("Rblade_b1", chain_RB, 0);
+	REGISTER_RGB("Rblade_b2", chain_RB, 1);
+	REGISTER_RGB("Rblade_m1", chain_RB, 2);
+	REGISTER_RGB("Rblade_m2", chain_RB, 3);
+	REGISTER_RGB("Rblade_t1", chain_RB, 4);
+	REGISTER_RGB("Rblade_t2", chain_RB, 5);
+	REGISTER_RGB("Rtiangle_f4", chain_RB, 6);
+	REGISTER_RGB("Rtriangle_f3", chain_RB, 7);
+	REGISTER_RGB("Rtriangle_f2", chain_RB, 8);
+	REGISTER_RGB("Rtriangle_f1", chain_RB, 9);
+	REGISTER_RGB("Rtriangle_b1", chain_RB, 10);
+	REGISTER_RGB("Rtriangle_b2", chain_RB, 11);
+	REGISTER_RGB("Rtriangle_b3", chain_RB, 12);
+	REGISTER_RGB("Rtriangle_b4", chain_RB, 13);
+
+	/*
+	REGISTER_RGB("Lguard_1", chain_LG, 0);
+	REGISTER_RGB("Lguard_2", chain_LG, 1);
+	REGISTER_RGB("Lguard_3", chain_LG, 2);
+	REGISTER_RGB("Lguard_4", chain_LG, 3);
+	*/
+	REGISTER_RGB("L1", chain_LG, 0);
+	REGISTER_RGB("L2", chain_LG, 1);
+	REGISTER_RGB("L3", chain_LG, 2);
+	REGISTER_RGB("L4", chain_LG, 3);
+
+	REGISTER_RGB("Rguard_1", chain_RG, 0);
+	REGISTER_RGB("Rguard_2", chain_RG, 1);
+	REGISTER_RGB("Rguard_3", chain_RG, 2);
+	REGISTER_RGB("Rguard_4", chain_RG, 3);
+
+	REGISTER_RGB("Lspike_t", chain_LS, 0);
+	REGISTER_RGB("Lspike_b", chain_LS, 1);
+	REGISTER_RGB("Lspike", chain_LS, 2);
+
+	REGISTER_RGB("Rspike_t", chain_RS, 0);
+	REGISTER_RGB("Rspike_b", chain_RS, 1);
+	REGISTER_RGB("Rspike", chain_RS, 2);
 }
 
 /*==============================[Light Update Thread]========================*/

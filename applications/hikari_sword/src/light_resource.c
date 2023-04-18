@@ -190,16 +190,11 @@ static void setup_light_resources(void)
 	REGISTER_RGB("Rtriangle_b3", chain_RB, 12);
 	REGISTER_RGB("Rtriangle_b4", chain_RB, 13);
 
-	/*
+
 	REGISTER_RGB("Lguard_1", chain_LG, 0);
 	REGISTER_RGB("Lguard_2", chain_LG, 1);
 	REGISTER_RGB("Lguard_3", chain_LG, 2);
 	REGISTER_RGB("Lguard_4", chain_LG, 3);
-	*/
-	REGISTER_RGB("L1", chain_LG, 0);
-	REGISTER_RGB("L2", chain_LG, 1);
-	REGISTER_RGB("L3", chain_LG, 2);
-	REGISTER_RGB("L4", chain_LG, 3);
 
 	REGISTER_RGB("Rguard_1", chain_RG, 0);
 	REGISTER_RGB("Rguard_2", chain_RG, 1);

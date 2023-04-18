@@ -28,11 +28,10 @@ void sole_constructor(void)
 {
 	light_res_err_t res_err = 0;
 
-	res_err = light_resource_use("L1", &l1)
-			  | light_resource_use("L2", &l2)
-			  | light_resource_use("L3", &l3)
-			  | light_resource_use("L4", &l4);
-
+	res_err = light_resource_use("Lguard_1", &l1)
+			  | light_resource_use("Lguard_2", &l2)
+			  | light_resource_use("Lguard_3", &l3)
+			  | light_resource_use("Lguard_4", &l4);
 	if (res_err) {
 		printk("resource use err %d", res_err);
 		k_oops();

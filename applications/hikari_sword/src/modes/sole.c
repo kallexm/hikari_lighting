@@ -9,18 +9,10 @@
 #include "slab_event.h"
 #include "../lib/slab/events/slab_event_rgb.h"
 
-/* LED resources */
-static struct light_resource *l1;
-static struct light_resource *l2;
-static struct light_resource *l3;
-static struct light_resource *l4;
+#include "default_resources.h"
 
 /* Slabs */
 static struct slab *sc;
-static struct slab *sl1;
-static struct slab *sl2;
-static struct slab *sl3;
-static struct slab *sl4;
 
 static struct hsv_value sole_color = {.h = 130, .s = 0.9, .v = 0.3};
 
@@ -28,25 +20,88 @@ void sole_constructor(void)
 {
 	light_res_err_t res_err = 0;
 
-	res_err = light_resource_use("Lguard_1", &l1)
-			  | light_resource_use("Lguard_2", &l2)
-			  | light_resource_use("Lguard_3", &l3)
-			  | light_resource_use("Lguard_4", &l4);
+	res_err = USE_ALL_HIKARI_LIGHT_RESOURCES;
 	if (res_err) {
 		printk("resource use err %d", res_err);
 		k_oops();
 	}
 
-	sc = slab_create(SLAB_TYPE_HSV2RGB);
-	sl1 = slab_create(SLAB_TYPE_LED, l1->data, LED_TYPE_RGB);
-	sl2 = slab_create(SLAB_TYPE_LED, l2->data, LED_TYPE_RGB);
-	sl3 = slab_create(SLAB_TYPE_LED, l3->data, LED_TYPE_RGB);
-	sl4 = slab_create(SLAB_TYPE_LED, l4->data, LED_TYPE_RGB);
+	CREATE_ALL_HIKARI_LIGHT_SLABS;
 
-	slab_connect(sl1, sc);
-	slab_connect(sl2, sc);
-	slab_connect(sl3, sc);
-	slab_connect(sl4, sc);
+	sc = slab_create(SLAB_TYPE_HSV2RGB);
+
+	slab_connect(slp[1], slp[0]);
+
+	slab_connect(slc[1], slc[0]);
+	slab_connect(slc[2], slc[0]);
+	slab_connect(slc[3], slc[0]);
+	slab_connect(slc[4], slc[0]);
+	slab_connect(slc[5], slc[0]);
+
+	slab_connect(slsq[1], slsq[0]);
+
+	slab_connect(slms[1], slms[0]);
+	slab_connect(slms[2], slms[0]);
+	slab_connect(slms[3], slms[0]);
+	slab_connect(slms[4], slms[0]);
+	slab_connect(slms[5], slms[0]);
+
+	slab_connect(slts[1], slts[0]);
+
+	slab_connect(sllb[1], sllb[0]);
+	slab_connect(sllb[2], sllb[0]);
+	slab_connect(sllb[3], sllb[0]);
+	slab_connect(sllb[4], sllb[0]);
+	slab_connect(sllb[5], sllb[0]);
+
+	slab_connect(sllt[1], sllt[0]);
+	slab_connect(sllt[2], sllt[0]);
+	slab_connect(sllt[3], sllt[0]);
+	slab_connect(sllt[4], sllt[0]);
+	slab_connect(sllt[5], sllt[0]);
+	slab_connect(sllt[6], sllt[0]);
+	slab_connect(sllt[7], sllt[0]);
+
+	slab_connect(slrb[1], sllb[0]);
+	slab_connect(slrb[2], sllb[0]);
+	slab_connect(slrb[3], sllb[0]);
+	slab_connect(slrb[4], sllb[0]);
+	slab_connect(slrb[5], sllb[0]);
+
+	slab_connect(slrt[1], slrt[0]);
+	slab_connect(slrt[2], slrt[0]);
+	slab_connect(slrt[3], slrt[0]);
+	slab_connect(slrt[4], slrt[0]);
+	slab_connect(slrt[5], slrt[0]);
+	slab_connect(slrt[6], slrt[0]);
+	slab_connect(slrt[7], slrt[0]);
+
+	slab_connect(sllg[1], sllg[0]);
+	slab_connect(sllg[2], sllg[0]);
+	slab_connect(sllg[3], sllg[0]);
+
+	slab_connect(slrg[1], slrg[0]);
+	slab_connect(slrg[2], slrg[0]);
+	slab_connect(slrg[3], slrg[0]);
+
+	slab_connect(slls[1], slls[0]);
+	slab_connect(slls[2], slls[0]);
+
+	slab_connect(slrs[1], slrs[0]);
+	slab_connect(slrs[2], slrs[0]);
+
+	slab_connect(slc[0], sc);
+	slab_connect(slsq[0], sc);
+	slab_connect(slms[0], sc);
+	slab_connect(slts[0], sc);
+	slab_connect(sllb[0], sc);
+	slab_connect(sllt[0], sc);
+	slab_connect(slrb[0], sc);
+	slab_connect(slrt[0], sc);
+	slab_connect(sllg[0], sc);
+	slab_connect(slrg[0], sc);
+	slab_connect(slls[0], sc);
+	slab_connect(slrs[0], sc);
 
 	struct slab_event *hsv_evt = slab_event_create(SLAB_EVENT_HSV, sole_color);
 	slab_stim(sc, hsv_evt);
@@ -56,17 +111,9 @@ void sole_destructor(void)
 {
 	light_res_err_t res_err = 0;
 
-	slab_destroy(sl4);
-	slab_destroy(sl3);
-	slab_destroy(sl2);
-	slab_destroy(sl1);
-	slab_destroy(sc);
+	DESTROY_ALL_HIKARI_LIGHT_SLABS;
 
-	res_err = light_resource_return(l1)
-			  | light_resource_return(l2)
-			  | light_resource_return(l3)
-			  | light_resource_return(l4);
-
+	res_err = RETURN_ALL_HIKARI_LIGHT_RESOURCES;
 	if (res_err) {
 		printk("resource return err %d", res_err);
 		k_oops();

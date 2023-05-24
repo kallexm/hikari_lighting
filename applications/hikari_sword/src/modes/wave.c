@@ -10,6 +10,7 @@
 
 #include "slab_event.h"
 #include "../lib/slab/events/slab_event_rgb.h"
+#include "wave_func.h"
 
 #include "default_resources.h"
 
@@ -57,8 +58,8 @@ static void wave_constructor(void)
 
 	/* Source Generator */
 	struct slab_waver_config sw_config = {
-		.hue = 130, .sat = 0.9,
-		.val = {.T = 200, .ym = 0.4, .yd = 0.2 }
+		.hue = 120.0, .sat = 0.7,
+		.val = {.T = 1000, .ym = 0.3, .yd = 0.2 }
 	};
 	st = slab_create(SLAB_TYPE_TICKER, K_MSEC(25));
 	sw = slab_create(SLAB_TYPE_WAVER, &sw_config);
@@ -223,13 +224,91 @@ void wave_reset(void)
 	slab_stim(st, slab_event_create(SLAB_EVENT_RESET));
 }
 
+void wave_tweak_color(float hue)
+{
+	struct slab_waver *s;
+
+	if (sw == NULL || hue > 360.0 || hue < 0.0) {
+		return;
+	}
+
+	s = (struct slab_waver *)sw;
+	s->data.h = hue;
+}
+
+void wave_tweak_intensity(float saturation)
+{
+	struct slab_waver *s;
+
+	if (sw == NULL || saturation > 1.0 || saturation < 0.0) {
+		return;
+	}
+
+	s = (struct slab_waver *)sw;
+	s->data.s = saturation;
+}
+
+void wave_tweak_gain(float value)
+{
+	struct slab_waver *s;
+	struct wave_func *wf;
+	struct wave_func_conf *conf;
+
+	if (sw == NULL || value > 1.0 || value < 0.0) {
+		return;
+	}
+
+	s = (struct slab_waver *)sw;
+	wf = (struct wave_func *)s->gen;
+
+	if (wf == NULL) {
+		return;
+	}
+	conf = &wf->conf;
+
+	if (conf->yd > 1.0 || conf->yd < 0.0) {
+		return;
+	}
+
+	float ym_min = 0.0 + conf->yd;
+	float ym_max = 1.0 - conf->yd;
+
+	value = (value < ym_min) ? ym_min : value;
+	value = (value > ym_max) ? ym_max : value;
+
+	conf->ym = value;
+}
+
+void wave_tweak_speed(float speed)
+{
+	struct slab_waver *s;
+	struct wave_func *wf;
+	struct wave_func_conf *conf;
+
+	if (sw == NULL || speed > 1.0 || speed < 0.0) {
+		return;
+	}
+
+	s = (struct slab_waver *)sw;
+	wf = (struct wave_func *)s->gen;
+
+	if (wf == NULL) {
+		return;
+	}
+	conf = &wf->conf;
+
+	uint32_t T_new = 100 + (uint32_t)(1900.0*speed);
+
+	conf->T = T_new;
+}
+
 static struct hikari_light_mode_api wave_api = {
 	.constructor = wave_constructor,
 	.destructor = wave_destructor,
-	.tweak_color = NULL,
-	.tweak_intensity = NULL,
-	.tweak_gain = NULL,
-	.tweak_speed = NULL
+	.tweak_color = wave_tweak_color,
+	.tweak_intensity = wave_tweak_intensity,
+	.tweak_gain = wave_tweak_gain,
+	.tweak_speed = wave_tweak_speed,
 };
 
 DEFINE_HIKARI_LIGHT_MODE(wave, HIKARI_LIGHT_MODE_WAVE, wave_api);

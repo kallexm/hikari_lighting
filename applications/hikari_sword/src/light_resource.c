@@ -52,7 +52,7 @@ static bool register_resource(char *id, uint8_t *data, size_t data_size)
 #define CHAIN_POMMEL_NUM 2
 #define CHAIN_POMMEL_PIN 11 /* D2 */
 #define CHAIN_POMMEL_PORT 1
-RGB_CHAIN_DEF(chain_P, CHAIN_POMMEL_NUM, CHAIN_POMMEL_PIN, CHAIN_POMMEL_PORT, false);
+RGB_CHAIN_DEF(chain_P, CHAIN_POMMEL_NUM, CHAIN_POMMEL_PIN, CHAIN_POMMEL_PORT, true);
 
 #define CHAIN_CORE_NUM 8
 #define CHAIN_CORE_PIN 12 /* D3 */
@@ -87,12 +87,12 @@ RGB_CHAIN_DEF(chain_RG, CHAIN_RIGHT_GUARD_NUM, CHAIN_RIGHT_GUARD_PIN, CHAIN_RIGH
 #define CHAIN_LEFT_SPIKE_NUM 3
 #define CHAIN_LEFT_SPIKE_PIN 27 /* D9 */
 #define CHAIN_LEFT_SPIKE_PORT 1
-RGB_CHAIN_DEF(chain_LS, CHAIN_LEFT_SPIKE_NUM, CHAIN_LEFT_SPIKE_PIN, CHAIN_LEFT_SPIKE_PORT, false);
+RGB_CHAIN_DEF(chain_LS, CHAIN_LEFT_SPIKE_NUM, CHAIN_LEFT_SPIKE_PIN, CHAIN_LEFT_SPIKE_PORT, true);
 
 #define CHAIN_RIGHT_SPIKE_NUM 3
 #define CHAIN_RIGHT_SPIKE_PIN 2 /* D10 */
 #define CHAIN_RIGHT_SPIKE_PORT 1
-RGB_CHAIN_DEF(chain_RS, CHAIN_RIGHT_SPIKE_NUM, CHAIN_RIGHT_SPIKE_PIN, CHAIN_RIGHT_SPIKE_PORT, false);
+RGB_CHAIN_DEF(chain_RS, CHAIN_RIGHT_SPIKE_NUM, CHAIN_RIGHT_SPIKE_PIN, CHAIN_RIGHT_SPIKE_PORT, true);
 
 rgb_chain_t *chains[9] = {&chain_P, &chain_C, &chain_IB, &chain_LB, &chain_RB,
 						  &chain_LG, &chain_RG, &chain_LS, &chain_RS};
@@ -120,15 +120,15 @@ static void setup_light_resources(void)
 		}
 	}
 
-	INIT_COLOR(chain_P, CHAIN_POMMEL_NUM, 40, 40, 40);
-	INIT_COLOR(chain_C, CHAIN_CORE_NUM, 40, 40, 40);
-	INIT_COLOR(chain_IB, CHAIN_INNER_BLADE_NUM, 40, 40, 40);
-	INIT_COLOR(chain_LB, CHAIN_LEFT_BLADE_NUM, 40, 40, 40);
-	INIT_COLOR(chain_RB, CHAIN_RIGHT_BLADE_NUM, 40, 40, 40);
-	INIT_COLOR(chain_LG, CHAIN_LEFT_GUARD_NUM, 40, 40, 40);
-	INIT_COLOR(chain_RG, CHAIN_RIGHT_GUARD_NUM, 40, 40, 40);
-	INIT_COLOR(chain_LS, CHAIN_LEFT_SPIKE_NUM, 40, 40, 40);
-	INIT_COLOR(chain_RS, CHAIN_RIGHT_SPIKE_NUM, 40, 40, 40);
+	INIT_COLOR(chain_P, CHAIN_POMMEL_NUM, 20, 20, 20);
+	INIT_COLOR(chain_C, CHAIN_CORE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_IB, CHAIN_INNER_BLADE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_LB, CHAIN_LEFT_BLADE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_RB, CHAIN_RIGHT_BLADE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_LG, CHAIN_LEFT_GUARD_NUM, 20, 20, 20);
+	INIT_COLOR(chain_RG, CHAIN_RIGHT_GUARD_NUM, 20, 20, 20);
+	INIT_COLOR(chain_LS, CHAIN_LEFT_SPIKE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_RS, CHAIN_RIGHT_SPIKE_NUM, 20, 20, 20);
 
 	for (uint32_t i = 0; i < sizeof(chains)/sizeof(rgb_chain_t *); i++) {
 		do {
@@ -181,7 +181,7 @@ static void setup_light_resources(void)
 	REGISTER_RGB("Rblade_m2", chain_RB, 3);
 	REGISTER_RGB("Rblade_t1", chain_RB, 4);
 	REGISTER_RGB("Rblade_t2", chain_RB, 5);
-	REGISTER_RGB("Rtiangle_f4", chain_RB, 6);
+	REGISTER_RGB("Rtriangle_f4", chain_RB, 6);
 	REGISTER_RGB("Rtriangle_f3", chain_RB, 7);
 	REGISTER_RGB("Rtriangle_f2", chain_RB, 8);
 	REGISTER_RGB("Rtriangle_f1", chain_RB, 9);

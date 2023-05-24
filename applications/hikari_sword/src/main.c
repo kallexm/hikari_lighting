@@ -8,7 +8,7 @@
 
 #include <drivers/gpio.h>
 
-#define SLEEP_TIME_MS   100
+#define SLEEP_TIME_MS   500
 
 /* Debug led */
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
@@ -34,22 +34,22 @@ static void setup_debug_led(void)
 static void wait_for_uart_attach(void)
 {
 	uint32_t dtr = 0;
+	uint32_t timeout = 20;
 
 	/* Poll if the DTR flag was set.
 	 * Blocks in the while loop until terminal is attached.
 	 */
-	while (!dtr) {
+	while (!dtr && timeout > 0) {
 		uart_line_ctrl_get(usb_uart_dev, UART_LINE_CTRL_DTR, &dtr);
 		// Give CPU resources to low priority threads.
-		k_sleep(K_MSEC(100));
+		k_msleep(100);
+		--timeout;
 		gpio_pin_toggle_dt(&led);
 	}
 }
 
 void main(void)
 {
-	int counter = 0;
-
 	/* Ready the red debug LED. */
 	setup_debug_led();
 
@@ -67,11 +67,6 @@ void main(void)
 
 	gpio_pin_set_dt(&led, 0);
 	while (1) {
-		counter += 1;
-		//printk("Loop %d\n", counter);
-
-		gpio_pin_toggle_dt(&led);
-		k_msleep(SLEEP_TIME_MS);
 		gpio_pin_toggle_dt(&led);
 		k_msleep(SLEEP_TIME_MS);
 	}

@@ -23,14 +23,14 @@ static inline void write_led_buffer(struct slab_led *slab, struct rgb_value *val
 {
 	switch (slab->led_type) {
 	case LED_TYPE_RGB:
-		slab->led[0] = val->r;
-		slab->led[1] = val->g;
+		slab->led[0] = val->g;
+		slab->led[1] = val->r;
 		slab->led[2] = val->b;
 		break;
 
 	case LED_TYPE_GRB:
-		slab->led[0] = val->g;
-		slab->led[1] = val->r;
+		slab->led[0] = val->r;
+		slab->led[1] = val->g;
 		slab->led[2] = val->b;
 		break;
 

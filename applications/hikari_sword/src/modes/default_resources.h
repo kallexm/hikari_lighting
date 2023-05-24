@@ -55,6 +55,9 @@ static struct slab *slrs[3];
 		slab_destroy(_slab_array[i]);                                                   \
 	}
 
+#define SET_LED_TYPE(_led_slab, _type)                                                  \
+	((struct slab_led *)_led_slab)->led_type = _type
+
 #define USE_ALL_HIKARI_LIGHT_RESOURCES            \
 	  light_resource_use("pommel_f", &lp[0])      \
 	| light_resource_use("pommel_b", &lp[1])      \
@@ -129,19 +132,21 @@ static struct slab *slrs[3];
 	| light_resource_use("Rspike_b", &lrs[1])     \
 	| light_resource_use("Rspike", &lrs[2])
 
-#define CREATE_ALL_HIKARI_LIGHT_SLABS \
-	CREATE_LED_ARRAY(slp, lp);        \
-	CREATE_LED_ARRAY(slc, lc);        \
-	CREATE_LED_ARRAY(slsq, lsq);      \
-	CREATE_LED_ARRAY(slms, lms);      \
-	CREATE_LED_ARRAY(slts, lts);      \
-	CREATE_LED_ARRAY(sllb, llb);      \
-	CREATE_LED_ARRAY(sllt, llt);      \
-	CREATE_LED_ARRAY(slrb, lrb);      \
-	CREATE_LED_ARRAY(slrt, lrt);      \
-	CREATE_LED_ARRAY(sllg, llg);      \
-	CREATE_LED_ARRAY(slrg, lrg);      \
-	CREATE_LED_ARRAY(slls, lls);      \
+#define CREATE_ALL_HIKARI_LIGHT_SLABS    \
+	CREATE_LED_ARRAY(slp, lp);           \
+	SET_LED_TYPE(slp[0], LED_TYPE_GRB);  \
+	SET_LED_TYPE(slp[1], LED_TYPE_GRB);  \
+	CREATE_LED_ARRAY(slc, lc);           \
+	CREATE_LED_ARRAY(slsq, lsq);         \
+	CREATE_LED_ARRAY(slms, lms);         \
+	CREATE_LED_ARRAY(slts, lts);         \
+	CREATE_LED_ARRAY(sllb, llb);         \
+	CREATE_LED_ARRAY(sllt, llt);         \
+	CREATE_LED_ARRAY(slrb, lrb);         \
+	CREATE_LED_ARRAY(slrt, lrt);         \
+	CREATE_LED_ARRAY(sllg, llg);         \
+	CREATE_LED_ARRAY(slrg, lrg);         \
+	CREATE_LED_ARRAY(slls, lls);         \
 	CREATE_LED_ARRAY(slrs, lrs)
 
 #define DESTROY_ALL_HIKARI_LIGHT_SLABS \

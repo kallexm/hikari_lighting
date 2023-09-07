@@ -140,6 +140,8 @@ static struct slab *slrs[3];
 	CREATE_LED_ARRAY(slsq, lsq);         \
 	CREATE_LED_ARRAY(slms, lms);         \
 	CREATE_LED_ARRAY(slts, lts);         \
+	SET_LED_TYPE(slts[0], LED_TYPE_GRB); \
+	SET_LED_TYPE(slts[1], LED_TYPE_GRB); \
 	CREATE_LED_ARRAY(sllb, llb);         \
 	CREATE_LED_ARRAY(sllt, llt);         \
 	CREATE_LED_ARRAY(slrb, lrb);         \
@@ -147,7 +149,13 @@ static struct slab *slrs[3];
 	CREATE_LED_ARRAY(sllg, llg);         \
 	CREATE_LED_ARRAY(slrg, lrg);         \
 	CREATE_LED_ARRAY(slls, lls);         \
-	CREATE_LED_ARRAY(slrs, lrs)
+	SET_LED_TYPE(slls[0], LED_TYPE_GRB); \
+	SET_LED_TYPE(slls[1], LED_TYPE_GRB); \
+	SET_LED_TYPE(slls[2], LED_TYPE_GRB); \
+	CREATE_LED_ARRAY(slrs, lrs);         \
+	SET_LED_TYPE(slrs[0], LED_TYPE_GRB); \
+	SET_LED_TYPE(slrs[1], LED_TYPE_GRB); \
+	SET_LED_TYPE(slrs[2], LED_TYPE_GRB)
 
 #define DESTROY_ALL_HIKARI_LIGHT_SLABS \
 	DESTROY_LED_ARRAY(slrs);           \

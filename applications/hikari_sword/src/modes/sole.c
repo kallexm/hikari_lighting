@@ -90,6 +90,7 @@ void sole_constructor(void)
 	slab_connect(slrs[1], slrs[0]);
 	slab_connect(slrs[2], slrs[0]);
 
+	slab_connect(slp[0], sc);
 	slab_connect(slc[0], sc);
 	slab_connect(slsq[0], sc);
 	slab_connect(slms[0], sc);

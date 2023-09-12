@@ -32,6 +32,8 @@ void off_constructor(void)
 	slab_connect(slc[5], slc[0]);
 
 	slab_connect(slsq[1], slsq[0]);
+	slab_connect(slsq[2], slsq[0]);
+	slab_connect(slsq[3], slsq[0]);
 
 	slab_connect(slms[1], slms[0]);
 	slab_connect(slms[2], slms[0]);

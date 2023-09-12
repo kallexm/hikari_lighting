@@ -54,10 +54,15 @@ static bool register_resource(char *id, uint8_t *data, size_t data_size)
 #define CHAIN_POMMEL_PORT 1
 RGB_CHAIN_DEF(chain_P, CHAIN_POMMEL_NUM, CHAIN_POMMEL_PIN, CHAIN_POMMEL_PORT, true);
 
-#define CHAIN_CORE_NUM 8
+#define CHAIN_CORE_NUM 6
 #define CHAIN_CORE_PIN 11 /* D2 */
 #define CHAIN_CORE_PORT 1
 RGB_CHAIN_DEF(chain_C, CHAIN_CORE_NUM, CHAIN_CORE_PIN, CHAIN_CORE_PORT, true);
+
+#define CHAIN_SQUARE_NUM 4
+#define CHAIN_SQUARE_PIN 23 /* D7 */
+#define CHAIN_SQUARE_PORT 0
+RGB_CHAIN_DEF(chain_S, CHAIN_SQUARE_NUM, CHAIN_SQUARE_PIN, CHAIN_SQUARE_PORT, true);
 
 #define CHAIN_INNER_BLADE_NUM 8
 #define CHAIN_INNER_BLADE_PIN 27 /* D9 */
@@ -94,7 +99,7 @@ RGB_CHAIN_DEF(chain_LS, CHAIN_LEFT_SPIKE_NUM, CHAIN_LEFT_SPIKE_PIN, CHAIN_LEFT_S
 #define CHAIN_RIGHT_SPIKE_PORT 1
 RGB_CHAIN_DEF(chain_RS, CHAIN_RIGHT_SPIKE_NUM, CHAIN_RIGHT_SPIKE_PIN, CHAIN_RIGHT_SPIKE_PORT, true);
 
-rgb_chain_t *chains[9] = {&chain_P, &chain_C, &chain_IB, &chain_LB, &chain_RB,
+rgb_chain_t *chains[10] = {&chain_P, &chain_C, &chain_S, &chain_IB, &chain_LB, &chain_RB,
 						  &chain_LG, &chain_RG, &chain_LS, &chain_RS};
 
 #define INIT_COLOR(_chain, _num, _red, _green, _blue) \
@@ -122,6 +127,7 @@ static void setup_light_resources(void)
 
 	INIT_COLOR(chain_P, CHAIN_POMMEL_NUM, 20, 20, 20);
 	INIT_COLOR(chain_C, CHAIN_CORE_NUM, 20, 20, 20);
+	INIT_COLOR(chain_S, CHAIN_SQUARE_NUM, 20, 20, 20);
 	INIT_COLOR(chain_IB, CHAIN_INNER_BLADE_NUM, 20, 20, 20);
 	INIT_COLOR(chain_LB, CHAIN_LEFT_BLADE_NUM, 20, 20, 20);
 	INIT_COLOR(chain_RB, CHAIN_RIGHT_BLADE_NUM, 20, 20, 20);
@@ -148,8 +154,11 @@ static void setup_light_resources(void)
 	REGISTER_RGB("core_b1", chain_C, 3);
 	REGISTER_RGB("core_b2", chain_C, 4);
 	REGISTER_RGB("core_b3", chain_C, 5);
-	REGISTER_RGB("square_f", chain_C, 6);
-	REGISTER_RGB("square_b", chain_C, 7);
+
+	REGISTER_RGB("square_f1", chain_S, 0);
+	REGISTER_RGB("square_f2", chain_S, 1);
+	REGISTER_RGB("square_b2", chain_S, 2);
+	REGISTER_RGB("square_b1", chain_S, 3);
 
 	REGISTER_RGB("midstar_f1", chain_IB, 0);
 	REGISTER_RGB("midstar_f2", chain_IB, 1);

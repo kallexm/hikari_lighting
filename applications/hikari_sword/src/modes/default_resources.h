@@ -5,7 +5,7 @@
 /* LED resources */
 static struct light_resource *lp[2];
 static struct light_resource *lc[6];
-static struct light_resource *lsq[2];
+static struct light_resource *lsq[4];
 
 static struct light_resource *lms[6];
 static struct light_resource *lts[2];
@@ -24,7 +24,7 @@ static struct light_resource *lrs[3];
 /* Slabs */
 static struct slab *slp[2];
 static struct slab *slc[6];
-static struct slab *slsq[2];
+static struct slab *slsq[4];
 
 static struct slab *slms[6];
 static struct slab *slts[2];
@@ -69,8 +69,10 @@ static struct slab *slrs[3];
 	| light_resource_use("core_b2", &lc[4])       \
 	| light_resource_use("core_b3", &lc[5])       \
 	                                              \
-	| light_resource_use("square_f", &lsq[0])     \
-	| light_resource_use("square_b", &lsq[1])     \
+	| light_resource_use("square_f1", &lsq[0])    \
+	| light_resource_use("square_f2", &lsq[1])    \
+	| light_resource_use("square_b1", &lsq[2])    \
+	| light_resource_use("square_b2", &lsq[3])    \
 	                                              \
 	| light_resource_use("midstar_f1", &lms[0])   \
 	| light_resource_use("midstar_f2", &lms[1])   \
@@ -185,6 +187,8 @@ static struct slab *slrs[3];
 	                                      \
 	| light_resource_return(lsq[0])       \
 	| light_resource_return(lsq[1])       \
+	| light_resource_return(lsq[2])       \
+	| light_resource_return(lsq[3])       \
 	                                      \
 	| light_resource_return(lms[0])       \
 	| light_resource_return(lms[1])       \

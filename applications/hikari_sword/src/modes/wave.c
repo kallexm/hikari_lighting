@@ -90,6 +90,8 @@ static void wave_constructor(void)
 	slab_connect(sd2, sc);
 	slab_connect(slsq[0], sd2);
 	slab_connect(slsq[1], sd2);
+	slab_connect(slsq[2], sd2);
+	slab_connect(slsq[3], sd2);
 
 	/* Inner blade wave stage 2 */
 	sd3 = slab_create(SLAB_TYPE_DELAY, 40);

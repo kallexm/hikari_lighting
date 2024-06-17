@@ -1,0 +1,6 @@
+tests:
+  lib.refctr_test:
+    platform_allow: native_posix
+    integration_platforms:
+      - native_posix
+    tags: refctr

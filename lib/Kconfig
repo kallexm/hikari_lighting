@@ -1,5 +1,6 @@
 menu "Hikari Libraries"
 
 rsource "adrledrgb/Kconfig"
+rsource "hsm/Kconfig"
 
 endmenu

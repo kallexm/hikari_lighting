@@ -1,0 +1,5 @@
+menu "hsm test options"
+
+endmenu
+
+source "Kconfig.zephyr"

@@ -1,0 +1,10 @@
+config HSM
+	bool "Hierarcial State Machine"
+
+if HSM
+
+config HSM_MAX_NEST_DEPTH
+	int "Max nesting depth"
+	default 5
+
+endif # HSM

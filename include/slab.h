@@ -2,7 +2,7 @@
 #define SLAB_H__
 
 #include <stdint.h>
-#include <zephyr.h>
+#include <zephyr/sys/dlist.h>
 
 #include "slab_event.h"
 

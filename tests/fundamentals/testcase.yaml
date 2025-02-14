@@ -1,6 +1,8 @@
 tests:
-  fundamentals:
-    platform_allow: native_posix
+  basics.fundamentals:
+    platform_allow:
+      - native_sim
     integration_platforms:
-      - native_posix
-    tags: fundamentals
+      - native_sim
+    tags:
+      - fundamentals

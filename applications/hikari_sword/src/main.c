@@ -1,12 +1,11 @@
-#include <zephyr/zephyr.h>
-#include <sys/printk.h>
-#include <usb/usb_device.h>
-#include <drivers/uart.h>
+#include <zephyr/kernel.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/usb/usb_device.h>
+#include <zephyr/drivers/uart.h>
+#include <zephyr/drivers/gpio.h>
 
 #include "hikari_light_ble.h"
 #include "light_resource.h"
-
-#include <drivers/gpio.h>
 
 #define SLEEP_TIME_MS   500
 
@@ -48,7 +47,7 @@ static void wait_for_uart_attach(void)
 	}
 }
 
-void main(void)
+int main(void)
 {
 	/* Ready the red debug LED. */
 	setup_debug_led();
@@ -70,4 +69,6 @@ void main(void)
 		gpio_pin_toggle_dt(&led);
 		k_msleep(SLEEP_TIME_MS);
 	}
+
+	return 0;
 }

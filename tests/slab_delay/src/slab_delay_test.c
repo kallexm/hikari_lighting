@@ -1,21 +1,21 @@
 #include <unity.h>
 
 #include "slabs/slab_delay.h"
-#include "mock_slab.h"
-#include "mock_slab_event.h"
+#include "cmock_slab.h"
+#include "cmock_slab_event.h"
 
 extern int unity_main(void);
 
 void setUp(void)
 {
-	mock_slab_Init();
-	mock_slab_event_Init();
+	cmock_slab_Init();
+	cmock_slab_event_Init();
 }
 
 void tearDown(void)
 {
-	mock_slab_Verify();
-	mock_slab_event_Verify();
+	cmock_slab_Verify();
+	cmock_slab_event_Verify();
 }
 
 /* Suite teardown shall finalize with mandatory call to generic_suiteTearDown. */
@@ -70,20 +70,20 @@ void test_slab_delay_stim_rgb(void)
 	/* Queue first event as number 0 in queue. */
 	slab_delay_stim(s, evt[0]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[0], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[0], sd->queue[0]);
 
 	/* Queue second event as number 1 in queue. */
 	slab_delay_stim(s, evt[1]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[1], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[1], sd->queue[1]);
 
 	/* Queue third event as number 0 in queue and expect
 	 * the previous number 0 event to be forwarded to childs.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[0]);
+	__cmock_slab_stim_childs_Expect(s, evt[0]);
 	slab_delay_stim(s, evt[2]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[2], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[2], sd->queue[0]);
 
 	slab_delay_destroy(s);
 }
@@ -110,28 +110,28 @@ void test_slab_delay_stim_hsv(void)
 	/* Queue first event as number 0 in queue. */
 	slab_delay_stim(s, evt[0]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[0], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[0], sd->queue[0]);
 
 	/* Queue second event as number 1 in queue. */
 	slab_delay_stim(s, evt[1]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[1], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[1], sd->queue[1]);
 
 	/* Queue third event as number 0 in queue and expect
 	 * the previous number 0 event to be forwarded to childs.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[0]);
+	__cmock_slab_stim_childs_Expect(s, evt[0]);
 	slab_delay_stim(s, evt[2]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[2], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[2], sd->queue[0]);
 
 	/* Queue fourth event as number 1 in queue and expect
 	 * the previous number 1 event to be forwarded to childs.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[1]);
+	__cmock_slab_stim_childs_Expect(s, evt[1]);
 	slab_delay_stim(s, evt[3]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[3], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[3], sd->queue[1]);
 
 	slab_delay_destroy(s);
 }
@@ -166,33 +166,33 @@ void test_slab_delay_stim_reset(void)
 	/* Queue first event as number 0 in queue. */
 	slab_delay_stim(s, evt[0]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[0], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[0], sd->queue[0]);
 
 	/* Queue second event as number 1 in queue. */
 	slab_delay_stim(s, evt[1]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[1], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[1], sd->queue[1]);
 
 	/* Queue third event as number 0 in queue and expect
 	 * the previous number 0 event to be forwarded to childs.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[0]);
+	__cmock_slab_stim_childs_Expect(s, evt[0]);
 	slab_delay_stim(s, evt[2]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[2], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[2], sd->queue[0]);
 
 	/* Queue fourth event as number 1 in queue and expect
 	 * the previous number 1 event to be forwarded to childs.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[1]);
+	__cmock_slab_stim_childs_Expect(s, evt[1]);
 	slab_delay_stim(s, evt[3]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[3], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[3], sd->queue[1]);
 
 	/* Fifth event is a reset. Expect queue to
 	 * be cleared and index set to 0.
 	 */
-	__wrap_slab_stim_childs_Expect(s, evt[4]);
+	__cmock_slab_stim_childs_Expect(s, evt[4]);
 	slab_delay_stim(s, evt[4]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
 	for (int i = 0; i < delay_periods; i++) {
@@ -202,16 +202,16 @@ void test_slab_delay_stim_reset(void)
 	/* Test that queuing still works after reset. */
 	slab_delay_stim(s, evt[0]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[0], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[0], sd->queue[0]);
 
 	slab_delay_stim(s, evt[1]);
 	TEST_ASSERT_EQUAL(0, sd->idx);
-	TEST_ASSERT_EQUAL(evt[1], sd->queue[1]);
+	TEST_ASSERT_EQUAL_PTR(evt[1], sd->queue[1]);
 
-	__wrap_slab_stim_childs_Expect(s, evt[0]);
+	__cmock_slab_stim_childs_Expect(s, evt[0]);
 	slab_delay_stim(s, evt[2]);
 	TEST_ASSERT_EQUAL(1, sd->idx);
-	TEST_ASSERT_EQUAL(evt[2], sd->queue[0]);
+	TEST_ASSERT_EQUAL_PTR(evt[2], sd->queue[0]);
 
 	/* Deallocate */
 	slab_delay_destroy(s);
@@ -243,7 +243,7 @@ void test_slab_delay_stim_default(void)
 
 extern int unity_main(void);
 
-void main(void)
+int main(void)
 {
-	(void)unity_main();
+	return unity_main();
 }

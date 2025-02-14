@@ -1,7 +1,7 @@
 #ifndef SLAB_EVENT_RGB_H__
 #define SLAB_EVENT_RGB_H__
 
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "slab_event.h"
 #include "rgb_hsv.h"

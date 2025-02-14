@@ -1,6 +1,8 @@
 tests:
-  lib.slab_led_test:
-    platform_allow: native_posix
+  lib.slab_led:
+    platform_allow:
+      - native_sim
     integration_platforms:
-      - native_posix
-    tags: slab_led
+      - native_sim
+    tags:
+      - slab_led

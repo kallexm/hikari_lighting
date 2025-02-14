@@ -1,6 +1,6 @@
 #include "wave_func.h"
 
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 static void reset(struct wave_func *wf, const struct wave_func_conf *conf)
 {
@@ -60,9 +60,9 @@ float wave_func_process(struct wave_func *wf, uint32_t t)
 	if (t < wf->t0) {
 		y = params->ym - params->yd;
 	} else if (t < t1) {
-		y = params->ym + (2.0/(params->T)*(t - wf->t0) - 1) * params->yd;
+		y = params->ym + (2.0f/(params->T)*(t - wf->t0) - 1) * params->yd;
 	} else if (t < t2) {
-		y = params->ym - (2.0/(params->T)*(t - wf->t0 - params->T) - 1) * params->yd;
+		y = params->ym - (2.0f/(params->T)*(t - wf->t0 - params->T) - 1) * params->yd;
 	} else {
 		y = params->ym - params->yd;
 	}

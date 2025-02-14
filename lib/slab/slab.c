@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <zephyr.h>
+#include <zephyr/sys/dlist.h>
 
 #include "slab.h"
 #include "slab_event.h"

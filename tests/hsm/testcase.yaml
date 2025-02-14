@@ -1,6 +1,8 @@
 tests:
-  lib.hsm_test:
-    platform_allow: native_posix
+  lib.hsm:
+    platform_allow:
+      - native_sim
     integration_platforms:
-      - native_posix
-    tags: hsm
+      - native_sim
+    tags:
+      - hsm

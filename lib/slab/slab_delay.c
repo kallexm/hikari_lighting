@@ -2,6 +2,8 @@
 
 #include "slabs/slab_delay.h"
 
+#include <zephyr/kernel.h>
+
 static void reset_queue(struct slab_delay *slab)
 {
 	for (int i = 0; i < slab->length; i++) {

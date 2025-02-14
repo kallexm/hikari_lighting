@@ -230,7 +230,7 @@ void wave_tweak_color(float hue)
 {
 	struct slab_waver *s;
 
-	if (sw == NULL || hue > 360.0 || hue < 0.0) {
+	if (sw == NULL || hue > 360.0f || hue < 0.0f) {
 		return;
 	}
 
@@ -242,7 +242,7 @@ void wave_tweak_intensity(float saturation)
 {
 	struct slab_waver *s;
 
-	if (sw == NULL || saturation > 1.0 || saturation < 0.0) {
+	if (sw == NULL || saturation > 1.0f || saturation < 0.0f) {
 		return;
 	}
 
@@ -256,7 +256,7 @@ void wave_tweak_gain(float value)
 	struct wave_func *wf;
 	struct wave_func_conf *conf;
 
-	if (sw == NULL || value > 1.0 || value < 0.0) {
+	if (sw == NULL || value > 1.0f || value < 0.0f) {
 		return;
 	}
 
@@ -268,12 +268,12 @@ void wave_tweak_gain(float value)
 	}
 	conf = &wf->conf;
 
-	if (conf->yd > 1.0 || conf->yd < 0.0) {
+	if (conf->yd > 1.0f || conf->yd < 0.0f) {
 		return;
 	}
 
-	float ym_min = 0.0 + conf->yd;
-	float ym_max = 1.0 - conf->yd;
+	float ym_min = 0.0f + conf->yd;
+	float ym_max = 1.0f - conf->yd;
 
 	value = (value < ym_min) ? ym_min : value;
 	value = (value > ym_max) ? ym_max : value;
@@ -287,7 +287,7 @@ void wave_tweak_speed(float speed)
 	struct wave_func *wf;
 	struct wave_func_conf *conf;
 
-	if (sw == NULL || speed > 1.0 || speed < 0.0) {
+	if (sw == NULL || speed > 1.0f || speed < 0.0f) {
 		return;
 	}
 
@@ -299,7 +299,7 @@ void wave_tweak_speed(float speed)
 	}
 	conf = &wf->conf;
 
-	uint32_t T_new = 100 + (uint32_t)(1900.0*speed);
+	uint32_t T_new = 100 + (uint32_t)(1900.0f*speed);
 
 	conf->T = T_new;
 }

@@ -1,4 +1,4 @@
-#include <zephyr/random/rand32.h>
+#include <zephyr/random/random.h>
 
 #include "slab_event.h"
 #include "events/slab_event_tick.h"
@@ -10,7 +10,7 @@
 
 static inline float random_value()
 {
-	return (float)(sys_rand32_get() & 0x03FF) / 1024.0;
+	return (float)(sys_rand32_get() & 0x03FF) / 1024.0f;
 }
 
 

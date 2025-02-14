@@ -1,6 +1,8 @@
 tests:
-  lib.slab_glower_test:
-    platform_allow: native_posix
+  lib.slab_glower:
+    platform_allow:
+      - native_sim
     integration_platforms:
-      - native_posix
-    tags: slab_glower
+      - native_sim
+    tags:
+      - slab_glower

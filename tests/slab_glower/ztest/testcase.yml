@@ -1,8 +1,8 @@
 tests:
-  testing.slab_glower_test:
+  testing.slab_glower:
     build_only: true
     platform_allow: 
-      - native_posix
+      - native_sim
       - qemu_cortex_m3
-    tags: slab_glower
- 
+    tags:
+      - slab_glower

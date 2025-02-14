@@ -52,7 +52,7 @@ static void cms_suite_teardown(void *fixture)
 
 ZTEST_SUITE(cms_suite, NULL, cms_suite_setup, NULL, NULL, cms_suite_teardown);
 
-ZTEST(cms_suite, basic)
+ZTEST(cms_suite, test_basic)
 {
 	gpio_pin_set_dt(&led, 0);
 	k_msleep(SLEEP_TIME_MS);
@@ -66,7 +66,7 @@ ZTEST(cms_suite, basic)
 }
 #endif
 
-void main(void)
+int main(void)
 {
 	setup_debug_led();
 
@@ -81,4 +81,6 @@ void main(void)
 		gpio_pin_toggle_dt(&led);
 		k_msleep(SLEEP_TIME_MS);
 	}
+
+	return 0;
 }

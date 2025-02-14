@@ -9,7 +9,7 @@ cmock_handle(${HIKARI_DIR}/include/slab_event.h)
 cmock_handle(${HIKARI_DIR}/lib/slab/events/slab_event_hsv.h)
 cmock_handle(${HIKARI_DIR}/lib/slab/events/slab_event_tick.h)
 cmock_handle(${HIKARI_DIR}/include/glow_func.h)
-#cmock_handle(${ZEPHYR_BASE}/include/zephyr/random/rand32.h)
+#cmock_handle(${ZEPHYR_BASE}/include/zephyr/random/random.h)
 
 # generate runner for the test
 test_runner_generate(src/slab_glower_test.c)

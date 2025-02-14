@@ -1,4 +1,4 @@
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 #include "slab_event.h"
 #include "events/slab_event_tick.h"

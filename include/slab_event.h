@@ -2,7 +2,6 @@
 #define SLAB_EVENT_H__
 
 #include <stdint.h>
-#include <zephyr.h>
 
 enum slab_event_id {
 	SLAB_EVENT_RESET = 1,

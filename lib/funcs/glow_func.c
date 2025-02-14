@@ -1,6 +1,6 @@
 #include "glow_func.h"
 
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 
 static void reset(struct glow_func *gf, const struct glow_func_conf *conf)
 {
@@ -71,7 +71,7 @@ float glow_func_process(struct glow_func *gf, uint32_t t, float w)
 	/* Calculate output value */
 	p1 = dt * (params->a + params->b);
 	p2 = dt * params->b * params->yd;
-	y = gf->y1 + p1 * (params->ym - gf->y1) + p2 * (w - 0.5);
+	y = gf->y1 + p1 * (params->ym - gf->y1) + p2 * (w - 0.5f);
 
 	/* Update states */
 	gf->t1 = t;

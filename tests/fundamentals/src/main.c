@@ -4,7 +4,7 @@
 
 K_EVENT_DEFINE(my_event);
 
-void main(void)
+int main(void)
 {
 	uint32_t ret;
 
@@ -17,4 +17,6 @@ void main(void)
 	ret = k_event_wait(&my_event, 0x040, false, K_MSEC(1000));
 
 	printk("Hello World: 0x%08x\n", ret);
+
+	return 0;
 }

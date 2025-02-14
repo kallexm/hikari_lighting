@@ -1,23 +1,23 @@
 #include <unity.h>
 
 #include "slabs/slab_led.h"
-#include "mock_slab.h"
-#include "mock_slab_event.h"
-#include "mock_slab_event_rgb.h"
-#include "mock_rgb_hsv.h"
+#include "cmock_slab.h"
+#include "cmock_slab_event.h"
+#include "cmock_slab_event_rgb.h"
+#include "cmock_rgb_hsv.h"
 
 extern int unity_main(void);
 
 void setUp(void)
 {
-	mock_slab_Init();
-	mock_slab_event_Init();
+	cmock_slab_Init();
+	cmock_slab_event_Init();
 }
 
 void tearDown(void)
 {
-	mock_slab_Verify();
-	mock_slab_event_Verify();
+	cmock_slab_Verify();
+	cmock_slab_event_Verify();
 }
 
 /* Suite teardown shall finalize with mandatory call to generic_suiteTearDown. */
@@ -40,7 +40,7 @@ void test_slab_led_create(void)
 
 	s = slab_led_create(led_data, LED_TYPE_RGB);
 	sl = (struct slab_led *)s;
-	TEST_ASSERT_EQUAL(led_data, sl->led);
+	TEST_ASSERT_EQUAL_PTR(led_data, sl->led);
 	TEST_ASSERT_EQUAL(LED_TYPE_RGB, sl->type);
 
 	slab_led_destroy(s);
@@ -64,7 +64,7 @@ void test_slab_led_stim_rgb_led_type_rgb(void)
 	s = slab_led_create(led_data, LED_TYPE_RGB);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[1]);
@@ -91,7 +91,7 @@ void test_slab_led_stim_rgb_led_type_grb(void)
 	s = slab_led_create(led_data, LED_TYPE_GRB);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[1]);
@@ -118,7 +118,7 @@ void test_slab_led_stim_rgb_led_type_red(void)
 	s = slab_led_create(led_data, LED_TYPE_RED);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0x0, led_data[1]);
@@ -145,7 +145,7 @@ void test_slab_led_stim_rgb_led_type_green(void)
 	s = slab_led_create(led_data, LED_TYPE_GREEN);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0x0, led_data[1]);
@@ -172,7 +172,7 @@ void test_slab_led_stim_rgb_led_type_blue(void)
 	s = slab_led_create(led_data, LED_TYPE_BLUE);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0x96, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0x0, led_data[1]);
@@ -198,7 +198,7 @@ void test_slab_led_stim_rgb_null(void)
 	s = slab_led_create(NULL, LED_TYPE_RGB);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 
 	slab_led_destroy(s);
@@ -231,7 +231,7 @@ void test_slab_led_stim_default(void)
 	s = slab_led_create(led_data, LED_TYPE_RGB);
 	sl = (struct slab_led *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
+	__cmock_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
 	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[0]);
 	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[1]);
@@ -244,7 +244,7 @@ void test_slab_led_stim_default(void)
 
 extern int unity_main(void);
 
-void main(void)
+int main(void)
 {
-	(void)unity_main();
+	return unity_main();
 }

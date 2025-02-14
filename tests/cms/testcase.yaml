@@ -1,6 +1,8 @@
 tests:
-  cms:
-    platform_allow: arduino_nano_33_ble
+  basic.cms:
+    platform_allow:
+      - arduino_nano_33_ble
     integration_platforms:
       - arduino_nano_33_ble
-    tags: cms
+    tags:
+      - cms

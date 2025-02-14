@@ -8,9 +8,9 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 	float r; float g; float b;
 	
 
-	if (val.h < 0.0 || 360.0 < val.h ||
-		val.s < 0.0 || 1.0 < val.s ||
-		val.v < 0.0 || 1.0 < val.v) {
+	if (val.h < 0.0f || 360.0f < val.h ||
+		val.s < 0.0f || 1.0f < val.s ||
+		val.v < 0.0f || 1.0f < val.v) {
 		out.r = 0;
 		out.g = 0;
 		out.b = 0;
@@ -19,8 +19,8 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 
 	C = val.v * val.s;
 
-	i = (uint8_t)(val.h / 60.0);
-	ff = (val.h / 60.0) - (float)i;
+	i = (uint8_t)(val.h / 60.0f);
+	ff = (val.h / 60.0f) - (float)i;
 
 	r = val.v;
 	g = val.v;
@@ -28,7 +28,7 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 
 	switch (i) {
 	case 0:
-		g -= C * (1.0 - ff);
+		g -= C * (1.0f - ff);
 		b -= C;
 		break;
 
@@ -39,7 +39,7 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 
 	case 2:
 		r -= C;
-		b -= C * (1.0 - ff);
+		b -= C * (1.0f - ff);
 		break;
 
 	case 3:
@@ -48,7 +48,7 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 		break;
 
 	case 4:
-		r -= C * (1.0 - ff);
+		r -= C * (1.0f - ff);
 		g -= C;
 		break;
 
@@ -59,9 +59,9 @@ struct rgb_value hsv2rgb(const struct hsv_value val)
 		break;
 	}
 
-	out.r = (uint8_t)(r * 255.0);
-	out.g = (uint8_t)(g * 255.0);
-	out.b = (uint8_t)(b * 255.0);
+	out.r = (uint8_t)(r * 255.0f);
+	out.g = (uint8_t)(g * 255.0f);
+	out.b = (uint8_t)(b * 255.0f);
 
 	return out;
 }
@@ -94,9 +94,9 @@ struct hsv_value rgb2hsv(const struct rgb_value val)
 			out.h = out.h + 360;
 		}
 	} else if (cmax == g) {
-		out.h = 60 * ((b - r) / diff) + 120.0;
+		out.h = 60 * ((b - r) / diff) + 120.0f;
 	} else if (cmax == b) {
-		out.h = 60 * ((r - g) / diff) + 240.0;
+		out.h = 60 * ((r - g) / diff) + 240.0f;
 	}
 
 	if (cmax == 0) {

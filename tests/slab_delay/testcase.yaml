@@ -1,6 +1,8 @@
 tests:
-  lib.slab_delay_test:
-    platform_allow: native_posix
+  lib.slab_delay:
+    platform_allow:
+      - native_sim
     integration_platforms:
-      - native_posix
-    tags: slab_delay
+      - native_sim
+    tags:
+      - slab_delay

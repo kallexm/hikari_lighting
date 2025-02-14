@@ -8,10 +8,10 @@
 
 
 static nrfx_pwm_config_t pwm_config_m   = {
-    .output_pins  = { NRFX_PWM_PIN_NOT_USED,
-                      NRFX_PWM_PIN_NOT_USED,
-                      NRFX_PWM_PIN_NOT_USED,
-                      NRFX_PWM_PIN_NOT_USED },
+    .output_pins  = { NRF_PWM_PIN_NOT_CONNECTED,
+                      NRF_PWM_PIN_NOT_CONNECTED,
+                      NRF_PWM_PIN_NOT_CONNECTED,
+                      NRF_PWM_PIN_NOT_CONNECTED },
     .irq_priority = 0,
     .base_clock   = NRF_PWM_CLK_16MHz,
     .count_mode   = NRF_PWM_MODE_UP,
@@ -22,10 +22,10 @@ static nrfx_pwm_config_t pwm_config_m   = {
 
 static nrfx_pwm_t        pwm_instance_m = NRFX_PWM_INSTANCE(1);
 
-static uint32_t out_pins_m[4] = { NRFX_PWM_PIN_NOT_USED,
-                                NRFX_PWM_PIN_NOT_USED,
-                                NRFX_PWM_PIN_NOT_USED,
-                                NRFX_PWM_PIN_NOT_USED };
+static uint32_t out_pins_m[4] = { NRF_PWM_PIN_NOT_CONNECTED,
+                                  NRF_PWM_PIN_NOT_CONNECTED,
+                                  NRF_PWM_PIN_NOT_CONNECTED,
+                                  NRF_PWM_PIN_NOT_CONNECTED };
 
 static nrf_pwm_sequence_t sequence_m = {
     .values = { .p_common = NULL },
@@ -71,13 +71,13 @@ int adrledrgb_update_leds(rgb_chain_t* rgb_chain)
     uint8_t g = 0;
     uint8_t b = 0;
 
-    if (!nrfx_pwm_is_stopped(&pwm_instance_m)) {
+    if (!nrfx_pwm_stopped_check(&pwm_instance_m)) {
         
         return -1;
     }
 
     out_pins_m[0] = rgb_chain->data_pin_reg;
-    nrf_pwm_pins_set(pwm_instance_m.p_registers, out_pins_m);
+    nrf_pwm_pins_set(pwm_instance_m.p_reg, out_pins_m);
 
     uint16_t* data     = rgb_chain->pwm_sequence;
     uint32_t  numleds  = rgb_chain->num_leds;

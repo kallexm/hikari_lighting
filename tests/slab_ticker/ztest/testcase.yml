@@ -1,8 +1,8 @@
 tests:
-  testing.slab_ticker_test:
+  testing.slab_ticker:
     build_only: true
-    platform_allow: 
-      - native_posix
+    platform_allow:
+      - native_sim
       - qemu_cortex_m3
-    tags: slab_ticker
- 
+    tags:
+      - slab_ticker

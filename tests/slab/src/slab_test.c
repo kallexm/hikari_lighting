@@ -1,36 +1,36 @@
 #include <unity.h>
 
 #include "slab.h"
-#include "mock_slab_event.h"
-#include "mock_slab_led.h"
-#include "mock_slab_delay.h"
-#include "mock_slab_glower.h"
-#include "mock_slab_hsv2rgb.h"
-#include "mock_slab_rgb2hsv.h"
-#include "mock_dlist.h"
+#include "cmock_slab_event.h"
+#include "cmock_slab_led.h"
+#include "cmock_slab_delay.h"
+#include "cmock_slab_glower.h"
+#include "cmock_slab_hsv2rgb.h"
+#include "cmock_slab_rgb2hsv.h"
+#include "cmock_dlist.h"
 
 extern int unity_main(void);
 
 void setUp(void)
 {
-	mock_slab_event_Init();
-	mock_slab_led_Init();
-	mock_slab_delay_Init();
-	mock_slab_glower_Init();
-	mock_slab_hsv2rgb_Init();
-	mock_slab_rgb2hsv_Init();
-	mock_dlist_Init();
+	cmock_slab_event_Init();
+	cmock_slab_led_Init();
+	cmock_slab_delay_Init();
+	cmock_slab_glower_Init();
+	cmock_slab_hsv2rgb_Init();
+	cmock_slab_rgb2hsv_Init();
+	cmock_dlist_Init();
 }
 
 void tearDown(void)
 {
-	mock_slab_event_Verify();
-	mock_slab_led_Verify();
-	mock_slab_delay_Verify();
-	mock_slab_glower_Verify();
-	mock_slab_hsv2rgb_Verify();
-	mock_slab_rgb2hsv_Verify();
-	mock_dlist_Verify();
+	cmock_slab_event_Verify();
+	cmock_slab_led_Verify();
+	cmock_slab_delay_Verify();
+	cmock_slab_glower_Verify();
+	cmock_slab_hsv2rgb_Verify();
+	cmock_slab_rgb2hsv_Verify();
+	cmock_dlist_Verify();
 }
 
 /* Suite teardown shall finalize with mandatory call to generic_suiteTearDown. */
@@ -99,16 +99,16 @@ void test_slab_create_and_destroy_led(void)
 	dummy_slab = (struct slab *)&dummy_led_slab;
 
 	/* Test slab_create with type led */
-	__wrap_slab_led_create_ExpectAndReturn(v, LED_TYPE_RGB, dummy_slab);
+	__cmock_slab_led_create_ExpectAndReturn(v, LED_TYPE_RGB, dummy_slab);
 	s = slab_create(SLAB_TYPE_LED, v, LED_TYPE_RGB);
 	TEST_ASSERT_TRUE(no_childs(s));
 	TEST_ASSERT_EQUAL(SLAB_TYPE_LED, s->type);
 	sl = (struct slab_led *)s;
 	TEST_ASSERT_EQUAL(LED_TYPE_RGB, sl->led_type);
-	TEST_ASSERT_EQUAL(v, sl->led);
+	TEST_ASSERT_EQUAL_PTR(v, sl->led);
 
 	/* Test slab_destroy on the dummy slab */
-	__wrap_slab_led_destroy_Expect(s);
+	__cmock_slab_led_destroy_Expect(s);
 	slab_destroy(s);
 	TEST_ASSERT_TRUE(no_childs(dummy_slab));
 }
@@ -126,7 +126,7 @@ void test_slab_create_and_destroy_delay(void)
 	dummy_slab = (struct slab *)&dummy_delay_slab;
 
 	/* Test slab_create with type delay */
-	__wrap_slab_delay_create_ExpectAndReturn(delay_periods, dummy_slab);
+	__cmock_slab_delay_create_ExpectAndReturn(delay_periods, dummy_slab);
 	s = slab_create(SLAB_TYPE_DELAY, delay_periods);
 	TEST_ASSERT_TRUE(no_childs(s));
 	TEST_ASSERT_EQUAL(SLAB_TYPE_DELAY, s->type);
@@ -134,7 +134,7 @@ void test_slab_create_and_destroy_delay(void)
 	TEST_ASSERT_EQUAL(delay_periods, sd->length);
 
 	/* Test slab_destroy on the dummy slab */
-	__wrap_slab_delay_destroy_Expect(s);
+	__cmock_slab_delay_destroy_Expect(s);
 	slab_destroy(s);
 	TEST_ASSERT_TRUE(no_childs(dummy_slab));
 }
@@ -154,15 +154,15 @@ void test_slab_create_and_destroy_glower(void)
 	dummy_slab = (struct slab *)&dummy_glower_slab;
 
 	/* Test slab_create with type glower */
-	__wrap_slab_glower_create_ExpectAndReturn(&glow_conf, dummy_slab);
+	__cmock_slab_glower_create_ExpectAndReturn(&glow_conf, dummy_slab);
 	s = slab_create(SLAB_TYPE_GLOWER, &glow_conf);
 	TEST_ASSERT_TRUE(no_childs(s));
 	TEST_ASSERT_EQUAL(SLAB_TYPE_GLOWER, s->type);
 	sg = (struct slab_glower *)s;
-	TEST_ASSERT_EQUAL(0xBEEFCAFE, sg->gen);
+	TEST_ASSERT_EQUAL_PTR((void *)0xBEEFCAFE, sg->gen);
 
 	/* Test slab_destroy on the dummy slab */
-	__wrap_slab_glower_destroy_Expect(s);
+	__cmock_slab_glower_destroy_Expect(s);
 	slab_destroy(s);
 	TEST_ASSERT_TRUE(no_childs(dummy_slab));
 }
@@ -173,13 +173,13 @@ void test_slab_create_and_destroy_hsv2rgb(void)
 	struct slab dummy_slab;
 
 	/* Test slab_create with type hsv2rgb */
-	__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab);
+	__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab);
 	s = slab_create(SLAB_TYPE_HSV2RGB);
 	TEST_ASSERT_TRUE(no_childs(s));
 	TEST_ASSERT_EQUAL(SLAB_TYPE_HSV2RGB, s->type);
 
 	/* Test slab_destroy on the dummy slab */
-	__wrap_slab_hsv2rgb_destroy_Expect(s);
+	__cmock_slab_hsv2rgb_destroy_Expect(s);
 	slab_destroy(s);
 	TEST_ASSERT_TRUE(no_childs(&dummy_slab));
 }
@@ -190,13 +190,13 @@ void test_slab_create_and_destroy_rgb2hsv(void)
 	struct slab dummy_slab;
 
 	/* Test slab_create with type rgb2hsv */
-	__wrap_slab_rgb2hsv_create_ExpectAndReturn(&dummy_slab);
+	__cmock_slab_rgb2hsv_create_ExpectAndReturn(&dummy_slab);
 	s = slab_create(SLAB_TYPE_RGB2HSV);
 	TEST_ASSERT_TRUE(no_childs(s));
 	TEST_ASSERT_EQUAL(SLAB_TYPE_RGB2HSV, s->type);
 
 	/* Test slab_destroy on the dummy slab */
-	__wrap_slab_rgb2hsv_destroy_Expect(s);
+	__cmock_slab_rgb2hsv_destroy_Expect(s);
 	slab_destroy(s);
 	TEST_ASSERT_TRUE(no_childs(&dummy_slab));
 }
@@ -229,7 +229,7 @@ void test_slab_connect_and_disconnect(void)
 
 	/* Create generic slabs */
 	for (int i = 0; i < num_slabs; i++) {
-		__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
+		__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
 		s[i] = slab_create(SLAB_TYPE_HSV2RGB);
 		TEST_ASSERT_TRUE(no_childs(s[i]));
 	}
@@ -253,7 +253,7 @@ void test_slab_connect_and_disconnect_many(void)
 
 	/* Create generic slabs */
 	for (int i = 0; i < num_slabs; i++) {
-		__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
+		__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
 		s[i] = slab_create(SLAB_TYPE_HSV2RGB);
 		TEST_ASSERT_TRUE(no_childs(s[i]));
 	}
@@ -295,7 +295,7 @@ void test_slab_connect_and_disconnect_invalid_slab(void)
 
 	/* Create generic slabs */
 	for (int i = 0; i < num_slabs; i++) {
-		__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
+		__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
 		s[i] = slab_create(SLAB_TYPE_HSV2RGB);
 		TEST_ASSERT_TRUE(no_childs(s[i]));
 	}
@@ -351,13 +351,13 @@ void test_slab_stim(void)
 	evt = &dummy_evt;
 
 	/* Create generic slab */
-	__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab);
+	__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab);
 	s = slab_create(SLAB_TYPE_HSV2RGB);
 	TEST_ASSERT_TRUE(no_childs(s));
 
 	/* Give an event to the slab */
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s, evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s, evt);
 	slab_stim(s, evt);
 }
 
@@ -377,15 +377,15 @@ void test_slab_stim_childs(void)
 
 	/* Create generic slabs */
 	for (int i = 0; i < num_slabs; i++) {
-		__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
+		__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
 		s[i] = slab_create(SLAB_TYPE_HSV2RGB);
 	}
 
 	slab_connect(s[1], s[0]);
 
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s[1], evt);
-	__wrap_slab_event_release_Expect(evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s[1], evt);
+	__cmock_slab_event_release_Expect(evt);
 	slab_stim_childs(s[0], evt);
 }
 
@@ -405,7 +405,7 @@ void test_slab_stim_childs_many(void)
 
 	/* Create generic slabs */
 	for (int i = 0; i < num_slabs; i++) {
-		__wrap_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
+		__cmock_slab_hsv2rgb_create_ExpectAndReturn(&dummy_slab[i]);
 		s[i] = slab_create(SLAB_TYPE_HSV2RGB);
 	}
 
@@ -415,18 +415,18 @@ void test_slab_stim_childs_many(void)
 	slab_connect(s[3], s[2]);
 	slab_connect(s[4], s[2]);
 
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s[1], evt);
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s[2], evt);
-	__wrap_slab_event_release_Expect(evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s[1], evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s[2], evt);
+	__cmock_slab_event_release_Expect(evt);
 	slab_stim_childs(s[0], evt);
 
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s[3], evt);
-	__wrap_slab_event_acquire_Expect(evt);
-	__wrap_slab_hsv2rgb_stim_Expect(s[4], evt);
-	__wrap_slab_event_release_Expect(evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s[3], evt);
+	__cmock_slab_event_acquire_Expect(evt);
+	__cmock_slab_hsv2rgb_stim_Expect(s[4], evt);
+	__cmock_slab_event_release_Expect(evt);
 	slab_stim_childs(s[2], evt);
 }
 
@@ -434,7 +434,7 @@ void test_slab_stim_childs_many(void)
 
 extern int unity_main(void);
 
-void main(void)
+int main(void)
 {
-	(void)unity_main();
+	return unity_main();
 }

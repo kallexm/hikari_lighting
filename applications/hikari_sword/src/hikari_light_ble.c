@@ -1,10 +1,10 @@
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/conn.h>
-#include <bluetooth/uuid.h>
-#include <bluetooth/gatt.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/hci.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/uuid.h>
+#include <zephyr/bluetooth/gatt.h>
 
 #include "hikari_light.h"
 
@@ -80,7 +80,7 @@ static ssize_t write_conf(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 		return len;
 	} else if (len == sizeof(float)) {
 		memcpy(&tweak_value, &byte_buf[0], sizeof(float));
-		printk("tweak value: %f\n", tweak_value);
+		printk("tweak value: %f\n", (double)tweak_value);
 	} else {
 		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
 	}
@@ -196,7 +196,10 @@ void ble_start(void)
 	}
 	printk("Bluetooth successfully initialized\n");
 
-	err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, adv, ARRAY_SIZE(adv), NULL, 0);
+	err = bt_le_adv_start(
+		BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONNECTABLE, BT_GAP_ADV_FAST_INT_MIN_2,
+				BT_GAP_ADV_FAST_INT_MAX_2, NULL),
+		adv, ARRAY_SIZE(adv), NULL, 0);
 	if (err) {
 		printk("Advertising failed to start, err %d\n", err);
 		return;

@@ -1,7 +1,7 @@
 #ifndef HIKARI_LIGHT_H__
 #define HIKARI_LIGHT_H__
 
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 #include <stdint.h>
 

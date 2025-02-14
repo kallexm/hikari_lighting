@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 typedef enum {
 	LIGHT_RESOURCE_SUCCESS = 0,

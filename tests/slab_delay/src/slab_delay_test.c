@@ -233,9 +233,8 @@ void test_slab_delay_stim_default(void)
 	s = slab_delay_create(delay_periods);
 	sd = (struct slab_delay *)s;
 
-	__wrap_slab_stim_childs_Expect(s, evt);
 	slab_delay_stim(s, evt);
-	TEST_ASSERT_EQUAL(0, sd->idx);
+	TEST_ASSERT_EQUAL(1, sd->idx);
 
 	slab_delay_destroy(s);
 }

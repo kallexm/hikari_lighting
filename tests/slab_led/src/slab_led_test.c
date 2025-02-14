@@ -66,8 +66,8 @@ void test_slab_led_stim_rgb_led_type_rgb(void)
 
 	__wrap_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
-	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[0]);
-	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[1]);
+	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[0]);
+	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[1]);
 	TEST_ASSERT_EQUAL_UINT8(0x96, led_data[2]);
 
 	slab_led_destroy(s);
@@ -93,8 +93,8 @@ void test_slab_led_stim_rgb_led_type_grb(void)
 
 	__wrap_slab_stim_childs_Expect(s, evt);
 	slab_led_stim(s, evt);
-	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[0]);
-	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[1]);
+	TEST_ASSERT_EQUAL_UINT8(0xA5, led_data[0]);
+	TEST_ASSERT_EQUAL_UINT8(0xC3, led_data[1]);
 	TEST_ASSERT_EQUAL_UINT8(0x96, led_data[2]);
 
 	slab_led_destroy(s);

@@ -2,5 +2,6 @@ menu "Hikari Libraries"
 
 rsource "adrledrgb/Kconfig"
 rsource "hsm/Kconfig"
+rsource "rbuf/Kconfig"
 
 endmenu

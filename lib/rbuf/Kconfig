@@ -1,0 +1,22 @@
+menuconfig RBUF
+	bool "Ring buffer library"
+	help
+	  Enable ring buffer library.
+
+if RBUF
+
+config RBUF_MAGIC
+	bool "Instance sanitization magic"
+	help
+	  Add a magic word to the ring buffer structure.
+	  This magic word is checked on rbuf function entries to decern
+	  if the instance passed is really an rbuf instance.
+
+config RBUF_ERROR_STRING
+	bool "Ring buffer error to string"
+	help
+	  Enable the error to string conversion in function rbuf_strerr().
+	  When this is enabled the rbuf_strerr() function can be used for
+	  pretty printing the error.
+
+endif # RBUF

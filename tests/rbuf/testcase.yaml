@@ -1,0 +1,19 @@
+common:
+  tags: rbuf
+
+tests:
+  lib.rbuf.no_magic:
+    platform_allow:
+      - native_sim
+    integration_platforms:
+      - native_sim
+    extra_configs:
+      - CONFIG_RBUF_MAGIC=n
+
+  lib.rbuf.magic:
+    platform_allow:
+      - native_sim
+    integration_platforms:
+      - native_sim
+    extra_configs:
+      - CONFIG_RBUF_MAGIC=y
